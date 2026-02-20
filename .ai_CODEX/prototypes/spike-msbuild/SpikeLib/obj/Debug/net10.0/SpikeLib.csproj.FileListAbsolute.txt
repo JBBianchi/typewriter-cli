@@ -1,0 +1,12 @@
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\bin\Debug\net10.0\SpikeLib.deps.json
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\bin\Debug\net10.0\SpikeLib.dll
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\bin\Debug\net10.0\SpikeLib.pdb
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\SpikeLib.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\SpikeLib.AssemblyInfoInputs.cache
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\SpikeLib.AssemblyInfo.cs
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\SpikeLib.csproj.CoreCompileInputs.cache
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\SpikeLib.sourcelink.json
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\SpikeLib.dll
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\refint\SpikeLib.dll
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\SpikeLib.pdb
+C:\Dev\Sandbox\typewriter-standalone\.ai\prototypes\spike-msbuild\SpikeLib\obj\Debug\net10.0\ref\SpikeLib.dll

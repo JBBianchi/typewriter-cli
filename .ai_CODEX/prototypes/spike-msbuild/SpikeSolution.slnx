@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MultiLib/MultiLib.csproj" />
+  <Project Path="SpikeLib/SpikeLib.csproj" />
+</Solution>

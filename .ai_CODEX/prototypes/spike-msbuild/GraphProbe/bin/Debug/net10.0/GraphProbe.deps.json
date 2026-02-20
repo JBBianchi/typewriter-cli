@@ -1,0 +1,175 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "GraphProbe/1.0.0": {
+        "dependencies": {
+          "Microsoft.Build": "15.1.0.0",
+          "Microsoft.Build.Framework": "15.1.0.0",
+          "Microsoft.Build.Utilities.Core": "15.1.0.0"
+        },
+        "runtime": {
+          "GraphProbe.dll": {}
+        }
+      },
+      "Microsoft.Build/15.1.0.0": {
+        "runtime": {
+          "Microsoft.Build.dll": {
+            "assemblyVersion": "15.1.0.0",
+            "fileVersion": "18.0.11.7603"
+          }
+        },
+        "resources": {
+          "cs/Microsoft.Build.resources.dll": {
+            "locale": "cs"
+          },
+          "de/Microsoft.Build.resources.dll": {
+            "locale": "de"
+          },
+          "es/Microsoft.Build.resources.dll": {
+            "locale": "es"
+          },
+          "fr/Microsoft.Build.resources.dll": {
+            "locale": "fr"
+          },
+          "it/Microsoft.Build.resources.dll": {
+            "locale": "it"
+          },
+          "ja/Microsoft.Build.resources.dll": {
+            "locale": "ja"
+          },
+          "ko/Microsoft.Build.resources.dll": {
+            "locale": "ko"
+          },
+          "pl/Microsoft.Build.resources.dll": {
+            "locale": "pl"
+          },
+          "pt-BR/Microsoft.Build.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "ru/Microsoft.Build.resources.dll": {
+            "locale": "ru"
+          },
+          "tr/Microsoft.Build.resources.dll": {
+            "locale": "tr"
+          },
+          "zh-Hans/Microsoft.Build.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/Microsoft.Build.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "Microsoft.Build.Framework/15.1.0.0": {
+        "runtime": {
+          "Microsoft.Build.Framework.dll": {
+            "assemblyVersion": "15.1.0.0",
+            "fileVersion": "18.0.11.7603"
+          }
+        }
+      },
+      "Microsoft.Build.Utilities.Core/15.1.0.0": {
+        "runtime": {
+          "Microsoft.Build.Utilities.Core.dll": {
+            "assemblyVersion": "15.1.0.0",
+            "fileVersion": "18.0.11.7603"
+          }
+        },
+        "resources": {
+          "cs/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "cs"
+          },
+          "de/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "de"
+          },
+          "es/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "es"
+          },
+          "fr/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "fr"
+          },
+          "it/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "it"
+          },
+          "ja/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "ja"
+          },
+          "ko/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "ko"
+          },
+          "pl/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "pl"
+          },
+          "pt-BR/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "ru/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "ru"
+          },
+          "tr/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "tr"
+          },
+          "zh-Hans/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/Microsoft.Build.Utilities.Core.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "Microsoft.VisualStudio.SolutionPersistence/1.0.0.0": {
+        "runtime": {
+          "Microsoft.VisualStudio.SolutionPersistence.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.52.6595"
+          }
+        }
+      },
+      "Microsoft.NET.StringTools/1.0.0.0": {
+        "runtime": {
+          "Microsoft.NET.StringTools.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "18.0.11.7603"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "GraphProbe/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Build/15.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Build.Framework/15.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Build.Utilities.Core/15.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.VisualStudio.SolutionPersistence/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.NET.StringTools/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
