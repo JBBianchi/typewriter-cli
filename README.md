@@ -1,0 +1,105 @@
+# Typewriter Standalone CLI
+
+<!-- badges -->
+
+## What is this?
+
+This repository ports [Typewriter](https://github.com/AdaskoTheBeAsT/Typewriter) to a standalone .NET 10 CLI (`typewriter-cli`). Typewriter generates TypeScript files from C# source code using `.tst` template files, enabling strongly-typed client code that stays in sync with server models.
+
+The original Typewriter runs as a Visual Studio extension (VSIX), which ties it to the Windows IDE at design time. This project removes that runtime dependency entirely, producing a cross-platform CLI that can run on Linux, macOS, and Windows.
+
+The primary goal is CI/CD integration: teams can invoke `typewriter-cli` in build pipelines without requiring Visual Studio, while keeping full feature parity with the upstream extension.
+
+## Planned CLI usage
+
+```
+typewriter-cli generate <templates> [--solution <path> | --project <path>] [options]
+```
+
+### Flags
+
+| Flag | Description |
+|------|-------------|
+| `<templates>` | Glob(s) for template files, e.g. `"**/*.tst"` |
+| `--solution <path>` | `.sln` or `.slnx` input |
+| `--project <path>` | `.csproj` input |
+| `--framework <TFM>` | Target framework to use |
+| `--configuration <Debug\|Release>` | Build configuration |
+| `--runtime <RID>` | Runtime identifier |
+| `--restore` | Run restore before loading |
+| `--output <dir>` | Output directory override |
+| `--fail-on-warnings` | Treat warnings as errors (exit code 1) |
+| `--msbuild-path <path>` | Explicit MSBuild instance path |
+| `--verbosity quiet\|normal\|detailed` | Diagnostic verbosity level |
+
+### Exit codes
+
+| Code | Meaning |
+|------|---------|
+| `0` | Success |
+| `1` | Generation/runtime/template errors; warnings elevated by `--fail-on-warnings` |
+| `2` | Invalid arguments or inputs |
+| `3` | Restore/load/build/SDK errors |
+
+### Examples
+
+```bash
+# Common usage
+typewriter-cli generate "**/*.tst" --solution ./MyApp.slnx --framework net10.0
+
+# CI usage
+dotnet restore ./MyApp.slnx
+typewriter-cli generate "**/*.tst" --solution ./MyApp.slnx \
+  --configuration Release --framework net10.0 \
+  --verbosity normal --fail-on-warnings
+```
+
+### Diagnostic codes
+
+Diagnostics use MSBuild-compatible format with stable `TWxxxx` codes:
+
+| Range | Category |
+|-------|----------|
+| `TW1xxx` | Argument, input, and template discovery |
+| `TW2xxx` | SDK, restore, MSBuild, graph, and workspace loading |
+| `TW3xxx` | Template compile, parse, and runtime |
+| `TW4xxx` | Output path and write |
+| `TW9xxx` | Parity gate or internal contract violations |
+
+## Project status
+
+> **Planning / pre-implementation** — analysis is complete; implementation has not started. This is **not yet a working tool**.
+
+The full roadmap, architecture, and phased delivery plan are documented in [`DETAILED_IMPLEMENTATION_PLAN.md`](DETAILED_IMPLEMENTATION_PLAN.md).
+
+## Repository layout
+
+| Path | Description |
+|------|-------------|
+| `origin/` | Vendored upstream Typewriter source (read-only reference) |
+| `_archive/` | Analysis documents — findings, decisions, risks, parity matrix |
+| `DETAILED_IMPLEMENTATION_PLAN.md` | Merged implementation plan with full architecture and CLI spec |
+| `AGENTS.md` | Coding-agent guidelines and conventions |
+
+## Key design decisions
+
+- **`net10.0` target** — single target framework everywhere; best long-term baseline.
+- **`dotnet tool` packaging** — CI-native distribution with lowest operational friction.
+- **`ProjectGraph` + Roslyn workspace hybrid loading** — graph-first traversal for deterministic project ordering, Roslyn workspace for semantic models.
+- **Template syntax unchanged** — `#reference`, `${ }`, filters, single-file mode, and output rules remain identical to upstream.
+- **MSBuild-compatible diagnostics** — stable `TWxxxx` error codes parseable by CI systems.
+- **Parity gates in CI** — golden output diffs, diagnostic snapshots, and metadata parity suites block release without cross-platform verification.
+
+## Upstream reference
+
+This project is derived from [AdaskoTheBeAsT/Typewriter](https://github.com/AdaskoTheBeAsT/Typewriter) (originally by Fredrik Hagnelius).
+
+Reuse policy: **"lift first, rewrite last"** — upstream generation and CodeModel logic is reused as the default strategy; rewriting occurs only where Visual Studio coupling makes reuse unsafe.
+
+## Contributing
+
+See [`AGENTS.md`](AGENTS.md) for coding-agent conventions and project guidelines.
+
+## License
+
+The upstream Typewriter project is licensed under the [Apache License 2.0](origin/LICENSE). This derivative project aligns with the same license terms.
