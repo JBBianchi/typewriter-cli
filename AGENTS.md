@@ -1,268 +1,148 @@
-# Coding Agent Guide (Typewriter CLI Spin-off — .NET Core)
+# AGENTS.md - Typewriter Standalone (.NET 10 CLI)
 
-## Goal
-Create a **spin-off** of `AdaskoTheBeAsT/Typewriter` that:
-- **Does not depend on Visual Studio** (no VSIX runtime requirement).
-- Runs as a **cross-platform CLI** suitable for **CI pipelines**.
-- Is a **modern .NET (Core) project** (cross-platform; Windows-only behavior must be explicitly justified).
-- Uses **MSBuild integration** to support:
-  - **.sln**, **.slnx**, and **.csproj** inputs.
-  - Multi-targeting, SDK-style projects, Directory.Build.props/targets, global.json, NuGet restore scenarios.
-- Achieves **feature parity** with the original extension (unless explicitly documented as “parity gap” with rationale + mitigation).
+Last updated: 2026-02-25
 
-## Hard Constraints (Non-negotiables)
-- The upstream repo clone (“origin”) **must remain untouched**:
-  - No commits, no file edits, no formatting changes.
-  - All work occurs in the spin-off repo/folder.
-- Your analysis must be **evidence-based** (paths + symbols) and captured in `.ai/`.
-- Do **analysis + planning only**: do not implement the CLI yet.
+Metadata:
+- Phase: Implementation
+- Target: net10.0
+- CLI Name: typewriter-cli
 
----
+## 1) Mission
 
-## Deliverables
-1. `.ai/` structured notes capturing:
-   - Findings, decisions, open questions, prototypes/spikes, risks, parity matrix
-2. `IMPLEMENTATION_PLAN.md` containing:
-   - Visual Studio dependency map + replacement strategy
-   - MSBuild loading design for sln/slnx/csproj
-   - Feature parity matrix
-   - Concrete architecture + phased implementation plan (milestones + tests)
-   - CI strategy, risks, and open questions
+Deliver a cross-platform `typewriter-cli` with upstream Typewriter parity, without Visual Studio runtime dependencies.
 
----
+Primary references (in priority order):
+- `DETAILED_IMPLEMENTATION_PLAN.md` (source of truth for architecture and milestones)
+- `README.md` (public contract summary)
+- `origin/` (read-only upstream behavior reference)
 
-## .NET Core / Modern .NET Requirements
-The spin-off MUST be implemented as a modern .NET solution:
-- Prefer **.NET 10** unless a lower LTS target is required (document the choice in decisions).
-- Cross-platform first:
-  - Works on Linux/macOS/Windows for CI usage.
-  - If any feature is Windows-only due to upstream constraints, you MUST:
-    - Mark it explicitly as a parity gap or conditional feature
-    - Provide a mitigation strategy
-- Packaging:
-  - Primary target: `dotnet tool` installable CLI (`dotnet tool install -g ...`)
-  - Consider secondary: self-contained binaries (optional, plan-dependent)
+## 2) Hard Rules (MUST / MUST NOT)
 
-Document these in:
-- `.ai/decisions/D-000X-target-framework.md`
-- `.ai/decisions/D-000Y-packaging.md`
+1. MUST NOT edit `origin/` (content, formatting, or commits).
+2. MUST target `net10.0` unless a documented decision says otherwise.
+3. MUST remain cross-platform on Windows, Linux, and macOS.
+4. MUST preserve parity unless an approved parity gap is documented with mitigation.
+5. MUST NOT add VS host/runtime dependencies (`EnvDTE`, `Microsoft.VisualStudio.*`, COM, registry-coupled behavior).
+6. MUST keep diagnostics stable and CI-parseable with `TWxxxx` codes.
+7. MUST keep generation deterministic (input ordering, output ordering, diagnostics ordering).
 
----
+## 3) Agent Working Rules
 
-## Working Style
-- Prefer **precise evidence** over interpretation:
-  - Always record file paths + class/method identifiers.
-- Keep `.ai/` notes **atomic** (one topic per file).
-- When you make assumptions, record them and create a matching open question.
+1. Map each task to the relevant milestone in `DETAILED_IMPLEMENTATION_PLAN.md`.
+2. Prefer vertical slices (`load -> metadata -> render -> write`) over broad refactors.
+3. Reuse upstream logic first; rewrite only when required by VS coupling or .NET 10 constraints.
+4. Keep changes concrete and repository-specific.
+5. When behavior changes, update tests and parity artifacts in the same change.
 
----
+## 4) Do-Not-Introduce Constraints
 
-## Upstream Exploration Checklist (Required)
-Perform a deep analysis of upstream focusing on:
+1. No reflection-based shortcuts that bypass MSBuild/Roslyn contracts.
+2. No static mutable global state for orchestration, caching, or diagnostics.
+3. No hidden background threads/tasks that outlive command execution.
+4. No non-deterministic filesystem traversal in discovery or generation.
+5. No breaking diagnostic contract changes (`TW` code/format/meaning) without explicit versioning notes.
 
-1. **Entry points / orchestration**
-   - VS extension init, commands, menus, events
-2. **Generation pipeline**
-   - Template discovery, evaluation, file writing
-   - Incremental triggers (save/build/solution load)
-3. **C# model extraction**
-   - How types/symbols are obtained (Roslyn? VS CodeModel? MSBuild?)
-4. **Configuration**
-   - Settings sources and precedence rules
-5. **I/O & output**
-   - Output directory, overwrite rules, formatting
-6. **Diagnostics**
-   - Logging, warnings, error surface, exit behavior
-7. **External dependencies**
-   - NuGet packages, VS SDK assemblies, MSBuild APIs, Roslyn APIs
+## 5) Required CLI Contract (Do Not Drift)
 
----
+Command shape:
+- `typewriter-cli generate <templates> [--solution <path> | --project <path>] [options]`
 
-## Visual Studio Dependency Analysis (Required)
-Build a concrete map of all dependencies on Visual Studio / Windows-only surfaces:
-
-Examples:
-- `Microsoft.VisualStudio.*` SDK packages
-- `EnvDTE` / `DTE2`
-- VS services (solution service, threading/JTF)
-- VS build events / solution load events
-- MEF composition in VS host
-- Any COM usage or registry probing
-- Any reliance on devenv-specific assumptions
-
-For each dependency, classify:
-- **Hard**: must be replaced for CLI
-- **Soft**: optional UI enhancement (likely removed)
-- **Accidental**: could be removed/refactored
-
-For each, propose replacement:
-- CLI arguments + config files
-- `Microsoft.Build.*` + `Microsoft.Build.Locator` (MSBuildLocator)
-- Roslyn `MSBuildWorkspace` or `Microsoft.Build.Graph.ProjectGraph` (or hybrid)
-- Standard logging (console + structured verbosity)
-
-Capture findings in `.ai/findings/F-*.md` and summarize replacements in the plan.
-
----
-
-## MSBuild + Solution/Project Loading Requirements
-The CLI must load inputs robustly:
-
-### Inputs
-- `path/to/solution.sln`
-- `path/to/solution.slnx`
-- `path/to/project.csproj`
-
-### Must handle
-- SDK selection via `global.json`
-- `Directory.Build.props/targets`
-- multi-targeting (`TargetFrameworks`)
-- project references + project graph traversal
-- restore scenarios (document behavior when assets are missing)
-- CI-friendly determinism
-
-### Strategy decision (mandatory)
-You must decide and justify:
-- Roslyn `MSBuildWorkspace`
-- `Microsoft.Build.Graph.ProjectGraph`
-- Hybrid (graph for traversal, workspace for semantic model)
-
-You MUST write:
-- A prototype note in `.ai/prototypes/PR-0001-msbuild-load-spike.md`
-- A decision note in `.ai/decisions/D-0001-project-loading-strategy.md`
-
-Include tradeoffs: symbol fidelity, performance, restore requirements, slnx support, cross-platform behavior.
-
----
-
-## Feature Parity (Required)
-Create and maintain a matrix:
-- Upstream feature
-- Where implemented upstream (file/symbol)
-- CLI parity status:
-  - ✅ identical
-  - 🟨 partial (define gaps)
-  - ❌ not planned (must justify)
-- Implementation notes and tests per feature
-
-Store it in:
-- `.ai/parity/P-0001-feature-matrix.md`
-
-Common parity targets (examples):
-- Template discovery & execution
-- Output path rules
-- Configuration variables/macros
-- Type filtering/selection rules
-- Generics/attributes/nested/partial types handling
-- Diagnostics quality
-- Deterministic generation and caching (CLI equivalent)
-- Performance considerations for large solutions
-
----
-
-## CLI Product Requirements (Minimum)
-Command:
-- `typewriter-cli generate [options] <input>`
-
-Options:
-- `--solution <pathToSlnOrSlnx>` (optional)
-- `--project <pathToCsproj>` (optional)
-- `--output <dir>` (optional override)
-- `--verbosity quiet|normal|detailed`
-- `--fail-on-warnings` (optional)
-
-Input:
-- Glob e.g.: "**/*.tst"
+Core options:
+- `--solution`, `--project`, `--framework`, `--configuration`, `--runtime`
+- `--restore`, `--output`, `--verbosity`, `--fail-on-warnings`
 
 Exit codes:
 - `0` success
-- `1` generation errors
-- `2` input/args errors
-- `3` build/restore/load errors
+- `1` generation/runtime/template errors (and warnings when elevated)
+- `2` argument/input errors
+- `3` SDK/restore/load/build errors
 
----
+## 6) Architecture Boundaries (Implementation Target)
 
-## `.ai/` Workspace Rules
-You will maintain a structured `.ai/` directory at the spin-off repo root.
+Runtime projects:
+- `src/Typewriter.Cli`
+- `src/Typewriter.Application`
+- `src/Typewriter.Loading.MSBuild`
+- `src/Typewriter.CodeModel`
+- `src/Typewriter.Metadata`
+- `src/Typewriter.Metadata.Roslyn`
+- `src/Typewriter.Generation`
 
-### Directory Structure
-.ai/
-  00_INDEX.md
-  findings/
-    F-0001-<short-title>.md
-  decisions/
-    D-0001-<short-title>.md
-  questions/
-    Q-0001-<short-title>.md
-  parity/
-    P-0001-feature-matrix.md
-  prototypes/
-    PR-0001-msbuild-load-spike.md
-  risks/
-    R-0001-<short-title>.md
+Test projects:
+- `tests/Typewriter.UnitTests`
+- `tests/Typewriter.IntegrationTests`
+- `tests/Typewriter.GoldenTests`
+- `tests/Typewriter.PerformanceTests`
 
-### Atomic Note Template (mandatory)
-Each note MUST include:
-- ID, Title, Date (YYYY-MM-DD)
-- Context
-- Evidence (file paths, symbols, minimal excerpts)
-- Conclusion
-- Impact
-- Next steps
+MSBuild loading strategy:
+- `ProjectGraph` for deterministic traversal
+- Roslyn workspace for semantic model fidelity
+- Support `.csproj`, `.sln`, `.slnx`
 
-### Index
-`.ai/00_INDEX.md` must list:
-- All findings/decisions/questions by ID with one-line summaries
-- Current status (“inventory”, “dependency map”, “parity matrix”, “ready for plan”)
+## 7) .NET 10 CLI Standards
 
----
+1. Use `System.CommandLine` for parsing/handlers.
+2. Use `PackAsTool` + `ToolCommandName` for tool packaging (not legacy `CommandName`).
+3. Register MSBuild once (`Microsoft.Build.Locator`) before any workspace operations.
+4. Respect `global.json`, `Directory.Build.props/targets`, and restore state.
+5. Keep multi-target default deterministic (first declared TFM unless `--framework` is provided).
+6. Never register multiple MSBuild instances in one process.
 
-## Analysis Workflow (Step-by-step)
-1. **Inventory upstream**
-   - Identify projects, entry points, generation flow
-2. **Map Visual Studio coupling**
-   - Findings per dependency cluster, with replacements
-3. **Understand model extraction**
-   - How semantic types are obtained
-4. **Map configuration + templates**
-   - Settings, template discovery, output rules
-5. **Build parity matrix**
-   - Populate `.ai/parity/P-0001-feature-matrix.md` continuously
-6. **Prototype loading strategies**
-   - PR note + decision note (Workspace vs Graph vs hybrid)
-7. **Define target CLI architecture**
-   - Modules, boundaries, interfaces
-8. **Write `IMPLEMENTATION_PLAN.md`**
-   - Using required headings below
-9. **Review for completeness**
-   - Evidence coverage, risks, open questions linked
+## 8) Mandatory Pre-Completion Verification
 
----
+Before concluding any non-doc task, run:
 
-## Output: `IMPLEMENTATION_PLAN.md` Required Headings
-You MUST produce `IMPLEMENTATION_PLAN.md` with the exact headings:
+```bash
+dotnet restore
+dotnet build -c Release
+dotnet test -c Release
+```
 
-1. Overview
-2. Goals and Non-goals
-3. Upstream Architecture Summary
-4. Visual Studio Dependency Map (with replacement plan)
-5. MSBuild & Project Loading Design (sln, slnx, csproj)
-6. CLI UX Spec (commands, flags, exit codes)
-7. Feature Parity Matrix (link to `.ai/parity/`)
-8. Target Architecture (modules, APIs, boundaries)
-9. Implementation Phases (milestones + acceptance criteria)
-10. Testing Strategy (unit/integration/golden tests)
-11. CI/CD Plan (restore/build/generate verification)
-12. Risk Register (top risks + mitigations)
-13. Open Questions (must link to `.ai/questions/`)
-14. Appendix (key references to upstream files/symbols)
+If packaging-related files/behavior changed, also run:
 
----
+```bash
+dotnet pack -c Release
+```
 
-## Quality Bar
-A plan is acceptable only if:
-- It is actionable without additional discovery
-- It proposes concrete modules/classes/interfaces to create
-- Each milestone has acceptance tests
-- Parity gaps are explicit and justified
-- Cross-platform behavior is addressed explicitly (since this is .NET Core / modern .NET)
+All required commands MUST succeed before task completion. Docs-only changes are exempt.
+
+## 9) Testing and Verification Rules
+
+1. Add or update tests for every behavior change.
+2. Maintain golden parity snapshots for rendering and output behavior.
+3. Keep integration fixtures for `.csproj`, `.sln`, `.slnx`, multi-target, and source generators.
+4. Validate local tool flow before release:
+   - `dotnet pack` CLI project
+   - `dotnet tool install --local --add-source <nupkg-dir> <package-id>`
+   - smoke `typewriter-cli generate ...`
+
+## 10) Parity Drift Guard
+
+1. Any intentional parity gap MUST have a decision record with rationale and mitigation.
+2. Any parity-affecting change MUST update golden baselines/snapshots in the same PR.
+3. If a commit is made for an intentional parity gap, include `PARITY-GAP:` in the commit subject.
+
+## 11) Performance and Memory Constraints
+
+1. When `--project` scope is provided, do not load unrelated solution projects.
+2. Reuse workspace/process-level services per invocation; avoid repeated workspace creation.
+3. Keep MSBuild registration single-pass per process.
+4. Avoid loading full semantic state when only template discovery/filtering is needed.
+5. Measure before optimizing; keep behavior parity first, then optimize safely.
+
+## 12) CI Expectations
+
+CI must gate on:
+1. Cross-platform matrix (`windows-latest`, `ubuntu-latest`, `macos-latest`)
+2. Restore -> build -> unit/integration/golden tests
+3. Tool packaging + smoke execution
+4. Parity and diagnostics stability checks
+
+## 13) Done Checklist for Any Significant Change
+
+1. Change satisfies the milestone acceptance criteria.
+2. Required local verification commands have passed.
+3. Tests were added/updated where needed and are passing.
+4. CLI contract and exit-code behavior are preserved.
+5. `origin/` remains unchanged.
+6. Docs were updated when behavior/contracts changed.
