@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Typewriter.Metadata\Typewriter.Metadata.csproj" />
+    <ProjectReference Include="..\Typewriter.CodeModel\Typewriter.CodeModel.csproj" />
+  </ItemGroup>
+
+</Project>
