@@ -7,7 +7,7 @@
 - **Active milestone**: M0 - Repo bootstrap and packaging skeleton
 - **Status**: Not started
 - **Blocker**: None
-- **Next step**: Create solution layout, project files, and Directory.Build.props per Section 5.1 of DETAILED_IMPLEMENTATION_PLAN.md
+- **Next step**: Create solution layout and project files per Section 5.1 of DETAILED_IMPLEMENTATION_PLAN.md
 
 ## Milestone Map
 
@@ -29,6 +29,7 @@
 | Task | Milestone | Agent | Status | Detail |
 |------|-----------|-------|--------|--------|
 | #8 Create Directory.Build.props | M0 | Executor | Done | Shared TFM, nullable, implicit usings, warnings-as-errors |
+| #18 Create global.json with .NET 10 SDK pin | M0 | Executor | Done | SDK 10.0.100, rollForward: latestFeature |
 
 ## Decisions
 
