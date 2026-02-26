@@ -1,19 +1,19 @@
 # Progress Tracker
 
-> Last touched: 2026-02-25 by Claude
+> Last touched: 2026-02-26 by Claude
 
 ## Current State
 
 - **Active milestone**: M0 - Repo bootstrap and packaging skeleton
-- **Status**: Not started
+- **Status**: In progress
 - **Blocker**: None
-- **Next step**: Create solution layout and project files per Section 5.1 of DETAILED_IMPLEMENTATION_PLAN.md
+- **Next step**: Create solution file (.sln) to tie all projects together; add test projects
 
 ## Milestone Map
 
 | Milestone | Name | Status | Notes |
 |-----------|------|--------|-------|
-| M0 | Repo bootstrap and packaging skeleton | Not started | |
+| M0 | Repo bootstrap and packaging skeleton | In progress | Directory.Build.props, global.json, project graph done |
 | M1 | Core reuse extraction (CodeModel/Metadata) | Not started | |
 | M2 | CLI contract, diagnostics, and configuration precedence | Not started | |
 | M3 | MSBuild loading: `.csproj` and restore pipeline | Not started | |
@@ -30,6 +30,7 @@
 |------|-----------|-------|--------|--------|
 | #8 Create Directory.Build.props | M0 | Executor | Done | Shared TFM, nullable, implicit usings, warnings-as-errors |
 | #18 Create global.json with .NET 10 SDK pin | M0 | Executor | Done | SDK 10.0.100, rollForward: latestFeature |
+| #19 Create source project .csproj files with dependency graph | M0 | Executor | Done | 7 projects, placeholder classes, full dependency graph |
 
 ## Decisions
 
