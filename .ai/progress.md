@@ -35,6 +35,7 @@
 | #21 Create Typewriter.Cli.slnx solution file | M0 | Executor | Done | .slnx with all 11 projects in src/tests folders |
 | #22 Create .github/workflows/ci.yml | M0 | Executor | Done | Cross-platform CI: restore, build, test, pack on 3 OS matrix |
 | #23 Verify M0 acceptance criteria | M0 | Executor | Done | Build/test/pack/tool-install verified; .gitignore added; SDK warnings suppressed |
+| #24 Update .ai/progress.md for M0 | M0 | Executor | Done | Progress tracker created with all §14 sections; M0 status documented |
 
 ## Decisions
 
