@@ -3,7 +3,7 @@ using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using Typewriter.Application;
-using Typewriter.Cli;
+using Typewriter.Application.Diagnostics;
 
 var rootCommand = new RootCommand("typewriter-cli \u2014 standalone Typewriter code generator");
 
@@ -53,7 +53,7 @@ generateCommand.SetHandler(async (InvocationContext ctx) =>
         FailOnWarnings = pr.GetValueForOption(failOnWarningsOpt),
     };
 
-    var reporter = new ConsoleDiagnosticReporter();
+    var reporter = new MsBuildDiagnosticReporter();
     var runner = new ApplicationRunner();
     ctx.ExitCode = await runner.RunAsync(options, reporter, ctx.GetCancellationToken());
 });
