@@ -4,6 +4,7 @@ using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using Typewriter.Application;
 using Typewriter.Application.Diagnostics;
+using Typewriter.Loading.MSBuild;
 
 var rootCommand = new RootCommand("typewriter-cli \u2014 standalone Typewriter code generator");
 
@@ -53,7 +54,14 @@ generateCommand.SetHandler(async (InvocationContext ctx) =>
         failOnWarnings: pr.GetValueForOption(failOnWarningsOpt));
 
     var reporter = new MsBuildDiagnosticReporter();
-    var runner = new ApplicationRunner();
+
+    // Compose the loading pipeline services.
+    var locatorService = new MsBuildLocatorService();
+    var inputResolver = new InputResolver();
+    var restoreService = new RestoreService();
+    var projectGraphService = new ProjectGraphService(locatorService);
+
+    var runner = new ApplicationRunner(inputResolver, restoreService, projectGraphService);
     ctx.ExitCode = await runner.RunAsync(options, reporter, ctx.GetCancellationToken());
 });
 

@@ -1,5 +1,6 @@
 using Microsoft.Build.Locator;
 using Typewriter.Application.Diagnostics;
+using Typewriter.Application.Loading;
 
 namespace Typewriter.Loading.MSBuild;
 

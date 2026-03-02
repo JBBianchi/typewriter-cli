@@ -1,6 +1,6 @@
 using Typewriter.Application.Diagnostics;
 
-namespace Typewriter.Loading.MSBuild;
+namespace Typewriter.Application.Loading;
 
 public interface IInputResolver
 {
