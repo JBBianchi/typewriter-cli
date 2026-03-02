@@ -19,11 +19,11 @@ namespace Typewriter.CodeModel.Implementation
 
         private string? _summary;
 
-        public override string Summary => _summary ?? (_summary = FormatValue(_root.Element("summary") == null ? string.Empty : string.Concat(_root.Element("summary").Nodes())));
+        public override string Summary => _summary ?? (_summary = FormatValue(_root.Element("summary") is { } summaryEl ? string.Concat(summaryEl.Nodes()) : string.Empty));
 
         private string? _returns;
 
-        public override string Returns => _returns ?? (_returns = FormatValue(_root.Element("returns") == null ? string.Empty : string.Concat(_root.Element("returns").Nodes())));
+        public override string Returns => _returns ?? (_returns = FormatValue(_root.Element("returns") is { } returnsEl ? string.Concat(returnsEl.Nodes()) : string.Empty));
 
         private IParameterCommentCollection? _parameters;
 

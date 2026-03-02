@@ -112,7 +112,7 @@ namespace Typewriter.CodeModel
 
                 if (typeArguments.Count == 1)
                 {
-                    var typeName = GetTypeScriptName(typeArguments.FirstOrDefault(), settings);
+                    var typeName = GetTypeScriptName(typeArguments[0], settings);
                     if (typeName.Contains("|"))
                     {
                         typeName = $"({typeName})";
