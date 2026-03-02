@@ -33,25 +33,25 @@ namespace Typewriter.CodeModel.Implementation
 
         public override bool IsGeneric => _metadata.IsGeneric;
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        private DocComment _docComment;
+        private DocComment? _docComment;
 
-        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+        public override DocComment DocComment => (_docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this)))!;
 
-        private ITypeParameterCollection _typeParameters;
+        private ITypeParameterCollection? _typeParameters;
 
         public override ITypeParameterCollection TypeParameters => _typeParameters ?? (_typeParameters = TypeParameterImpl.FromMetadata(_metadata.TypeParameters, this));
 
-        private IParameterCollection _parameters;
+        private IParameterCollection? _parameters;
 
         public override IParameterCollection Parameters => _parameters ?? (_parameters = ParameterImpl.FromMetadata(_metadata.Parameters, this, Settings));
 
-        private Type _type;
+        private Type? _type;
 
-        public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this, Settings));
+        public override Type Type => (_type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this, Settings)))!;
 
         public override string ToString()
         {

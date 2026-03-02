@@ -19,35 +19,35 @@ namespace Typewriter.CodeModel.Implementation
 
         public Settings Settings { get; }
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        private Record _baseRecord;
+        private Record? _baseRecord;
 
-        public override Record BaseRecord => _baseRecord ?? (_baseRecord = FromMetadata(_metadata.BaseRecord, this, Settings));
+        public override Record BaseRecord => (_baseRecord ?? (_baseRecord = FromMetadata(_metadata.BaseRecord, this, Settings)))!;
 
-        private IConstantCollection _constants;
+        private IConstantCollection? _constants;
 
         public override IConstantCollection Constants => _constants ?? (_constants = ConstantImpl.FromMetadata(_metadata.Constants, this, Settings));
 
-        private Record _containingRecord;
+        private Record? _containingRecord;
 
-        public override Record ContainingRecord => _containingRecord ?? (_containingRecord = FromMetadata(_metadata.ContainingRecord, this, Settings));
+        public override Record ContainingRecord => (_containingRecord ?? (_containingRecord = FromMetadata(_metadata.ContainingRecord, this, Settings)))!;
 
-        private IDelegateCollection _delegates;
+        private IDelegateCollection? _delegates;
 
         public override IDelegateCollection Delegates => _delegates ?? (_delegates = DelegateImpl.FromMetadata(_metadata.Delegates, this, Settings));
 
-        private DocComment _docComment;
+        private DocComment? _docComment;
 
-        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+        public override DocComment DocComment => (_docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this)))!;
 
-        private IEventCollection _events;
+        private IEventCollection? _events;
 
         public override IEventCollection Events => _events ?? (_events = EventImpl.FromMetadata(_metadata.Events, this, Settings));
 
-        private IFieldCollection _fields;
+        private IFieldCollection? _fields;
 
         public override IFieldCollection Fields => _fields ?? (_fields = FieldImpl.FromMetadata(_metadata.Fields, this, Settings));
 
@@ -55,7 +55,7 @@ namespace Typewriter.CodeModel.Implementation
 
         public override string AssemblyName => _metadata.AssemblyName;
 
-        private IInterfaceCollection _interfaces;
+        private IInterfaceCollection? _interfaces;
 
         public override IInterfaceCollection Interfaces => _interfaces ?? (_interfaces = InterfaceImpl.FromMetadata(_metadata.Interfaces, this, Settings));
 
@@ -63,7 +63,7 @@ namespace Typewriter.CodeModel.Implementation
 
         public override bool IsGeneric => _metadata.IsGeneric;
 
-        private IMethodCollection _methods;
+        private IMethodCollection? _methods;
 
         public override IMethodCollection Methods => _methods ?? (_methods = MethodImpl.FromMetadata(_metadata.Methods, this, Settings));
 
@@ -75,26 +75,26 @@ namespace Typewriter.CodeModel.Implementation
 
         public override Item Parent { get; }
 
-        private IPropertyCollection _properties;
+        private IPropertyCollection? _properties;
 
         public override IPropertyCollection Properties => _properties ?? (_properties = PropertyImpl.FromMetadata(_metadata.Properties, this, Settings));
 
-        private IStaticReadOnlyFieldCollection _staticReadOnlyFields;
+        private IStaticReadOnlyFieldCollection? _staticReadOnlyFields;
 
         public override IStaticReadOnlyFieldCollection StaticReadOnlyFields => _staticReadOnlyFields ?? (_staticReadOnlyFields = StaticReadOnlyFieldImpl.FromMetadata(_metadata.StaticReadOnlyFields, this, Settings));
 
 
-        private ITypeParameterCollection _typeParameters;
+        private ITypeParameterCollection? _typeParameters;
 
         public override ITypeParameterCollection TypeParameters => _typeParameters ?? (_typeParameters = TypeParameterImpl.FromMetadata(_metadata.TypeParameters, this));
 
-        private ITypeCollection _typeArguments;
+        private ITypeCollection? _typeArguments;
 
         public override ITypeCollection TypeArguments => _typeArguments ?? (_typeArguments = TypeImpl.FromMetadata(_metadata.TypeArguments, this, Settings));
 
-        private Type _type;
+        private Type? _type;
 
-        protected override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings));
+        protected override Type Type => (_type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings)))!;
 
         public override string ToString()
         {
@@ -106,7 +106,7 @@ namespace Typewriter.CodeModel.Implementation
             return new RecordCollectionImpl(metadata.Select(c => new RecordImpl(c, parent, settings)));
         }
 
-        public static Record FromMetadata(IRecordMetadata metadata, Item parent, Settings settings)
+        public static Record? FromMetadata(IRecordMetadata? metadata, Item parent, Settings settings)
         {
             return metadata == null ? null : new RecordImpl(metadata, parent, settings);
         }

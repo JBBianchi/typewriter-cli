@@ -31,13 +31,13 @@ namespace Typewriter.CodeModel.Implementation
 
         public override long Value => _metadata.Value;
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        private DocComment _docComment;
+        private DocComment? _docComment;
 
-        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+        public override DocComment DocComment => (_docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this)))!;
 
         public override string ToString()
         {

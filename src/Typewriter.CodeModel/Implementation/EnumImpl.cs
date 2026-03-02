@@ -31,29 +31,29 @@ namespace Typewriter.CodeModel.Implementation
 
         public override string Namespace => _metadata.Namespace;
 
-        private Type _type;
+        private Type? _type;
 
-        protected override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings));
+        protected override Type Type => (_type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings)))!;
 
         private bool? _isFlags;
 
         public override bool IsFlags => _isFlags ?? (_isFlags = Attributes.Any(a => string.Equals(a.FullName, "System.FlagsAttribute", System.StringComparison.OrdinalIgnoreCase))).Value;
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        private DocComment _docComment;
+        private DocComment? _docComment;
 
-        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+        public override DocComment DocComment => (_docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this)))!;
 
-        private IEnumValueCollection _values;
+        private IEnumValueCollection? _values;
 
         public override IEnumValueCollection Values => _values ?? (_values = EnumValueImpl.FromMetadata(_metadata.Values, this, Settings));
 
-        private Class _containingClass;
+        private Class? _containingClass;
 
-        public override Class ContainingClass => _containingClass ?? (_containingClass = ClassImpl.FromMetadata(_metadata.ContainingClass, this, Settings));
+        public override Class ContainingClass => (_containingClass ?? (_containingClass = ClassImpl.FromMetadata(_metadata.ContainingClass, this, Settings)))!;
 
         public override string ToString()
         {

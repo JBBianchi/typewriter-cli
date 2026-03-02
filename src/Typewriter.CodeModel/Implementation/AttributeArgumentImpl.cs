@@ -19,9 +19,9 @@ namespace Typewriter.CodeModel.Implementation
 
         public Settings Settings { get; }
 
-        public override Type Type => TypeImpl.FromMetadata(_metadata.Type, _parent, Settings);
+        public override Type Type => TypeImpl.FromMetadata(_metadata.Type, _parent, Settings)!;
 
-        public override Type TypeValue => TypeImpl.FromMetadata(_metadata.TypeValue, _parent, Settings);
+        public override Type TypeValue => TypeImpl.FromMetadata(_metadata.TypeValue, _parent, Settings)!;
 
         public override object Value => _metadata.GetValue();
 

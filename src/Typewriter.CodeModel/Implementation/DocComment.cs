@@ -17,15 +17,15 @@ namespace Typewriter.CodeModel.Implementation
 
         public override Item Parent { get; }
 
-        private string _summary;
+        private string? _summary;
 
         public override string Summary => _summary ?? (_summary = FormatValue(_root.Element("summary") == null ? string.Empty : string.Concat(_root.Element("summary").Nodes())));
 
-        private string _returns;
+        private string? _returns;
 
         public override string Returns => _returns ?? (_returns = FormatValue(_root.Element("returns") == null ? string.Empty : string.Concat(_root.Element("returns").Nodes())));
 
-        private IParameterCommentCollection _parameters;
+        private IParameterCommentCollection? _parameters;
 
         public override IParameterCommentCollection Parameters => _parameters ?? (_parameters = ParameterCommentImpl.FromXElements(_root.Elements("param"), this));
 
@@ -38,14 +38,14 @@ namespace Typewriter.CodeModel.Implementation
         {
             if (string.IsNullOrEmpty(value))
             {
-                return value;
+                return value ?? string.Empty;
             }
 
             var lines = value.Split('\r', '\n');
             return string.Join(" ", lines.Select(l => l.Trim())).Trim();
         }
 
-        public static DocComment FromXml(string xml, Item parent)
+        public static DocComment? FromXml(string xml, Item parent)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Typewriter.CodeModel.Implementation
         private ParameterCommentImpl(XElement element, Item parent)
         {
             Parent = parent;
-            Name = element.Attribute("name")?.Value.Trim();
+            Name = element.Attribute("name")?.Value.Trim() ?? string.Empty;
             Description = DocCommentImpl.FormatValue(element.Value);
         }
 

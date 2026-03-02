@@ -32,9 +32,9 @@ namespace Typewriter.CodeModel.Implementation
 
         public override string Value => GetValue(_metadata.Value);
 
-        public override Type Type => TypeImpl.FromMetadata(_metadata.Type, Parent, Settings);
+        public override Type Type => TypeImpl.FromMetadata(_metadata.Type, Parent, Settings)!;
 
-        private IAttributeArgumentCollection _arguments;
+        private IAttributeArgumentCollection? _arguments;
 
         public override IAttributeArgumentCollection Arguments => _arguments ?? (_arguments = AttributeArgumentImpl.FromMetadata(_metadata.Arguments, this, Settings));
 
@@ -42,7 +42,7 @@ namespace Typewriter.CodeModel.Implementation
         {
             if (value == null)
             {
-                return null;
+                return string.Empty;
             }
 
             if (value.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && value.EndsWith("\"", StringComparison.OrdinalIgnoreCase))

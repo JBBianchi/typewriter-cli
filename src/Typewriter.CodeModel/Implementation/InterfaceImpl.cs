@@ -33,45 +33,45 @@ namespace Typewriter.CodeModel.Implementation
 
         public override bool IsGeneric => _metadata.IsGeneric;
 
-        private Type _type;
+        private Type? _type;
 
-        public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings));
+        public override Type Type => (_type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings)))!;
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        private DocComment _docComment;
+        private DocComment? _docComment;
 
-        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+        public override DocComment DocComment => (_docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this)))!;
 
-        private IEventCollection _events;
+        private IEventCollection? _events;
 
         public override IEventCollection Events => _events ?? (_events = EventImpl.FromMetadata(_metadata.Events, this, Settings));
 
-        private IInterfaceCollection _interfaces;
+        private IInterfaceCollection? _interfaces;
 
         public override IInterfaceCollection Interfaces => _interfaces ?? (_interfaces = FromMetadata(_metadata.Interfaces, this, Settings));
 
-        private IMethodCollection _methods;
+        private IMethodCollection? _methods;
 
         public override IMethodCollection Methods => _methods ?? (_methods = MethodImpl.FromMetadata(_metadata.Methods, this, Settings));
 
-        private IPropertyCollection _properties;
+        private IPropertyCollection? _properties;
 
         public override IPropertyCollection Properties => _properties ?? (_properties = PropertyImpl.FromMetadata(_metadata.Properties, this, Settings));
 
-        private ITypeParameterCollection _typeParameters;
+        private ITypeParameterCollection? _typeParameters;
 
         public override ITypeParameterCollection TypeParameters => _typeParameters ?? (_typeParameters = TypeParameterImpl.FromMetadata(_metadata.TypeParameters, this));
 
-        private ITypeCollection _typeArguments;
+        private ITypeCollection? _typeArguments;
 
         public override ITypeCollection TypeArguments => _typeArguments ?? (_typeArguments = TypeImpl.FromMetadata(_metadata.TypeArguments, this, Settings));
 
-        private Class _containingClass;
+        private Class? _containingClass;
 
-        public override Class ContainingClass => _containingClass ?? (_containingClass = ClassImpl.FromMetadata(_metadata.ContainingClass, this, Settings));
+        public override Class ContainingClass => (_containingClass ?? (_containingClass = ClassImpl.FromMetadata(_metadata.ContainingClass, this, Settings)))!;
 
         public override string ToString()
         {

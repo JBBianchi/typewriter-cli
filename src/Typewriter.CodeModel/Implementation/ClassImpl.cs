@@ -37,75 +37,75 @@ namespace Typewriter.CodeModel.Implementation
 
         public override bool IsStatic => _metadata.IsStatic;
 
-        private Type _type;
+        private Type? _type;
 
-        protected override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings));
+        protected override Type Type => (_type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, Parent, Settings)))!;
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        private IConstantCollection _constants;
+        private IConstantCollection? _constants;
 
         public override IConstantCollection Constants => _constants ?? (_constants = ConstantImpl.FromMetadata(_metadata.Constants, this, Settings));
 
-        private IDelegateCollection _delegates;
+        private IDelegateCollection? _delegates;
 
         public override IDelegateCollection Delegates => _delegates ?? (_delegates = DelegateImpl.FromMetadata(_metadata.Delegates, this, Settings));
 
-        private DocComment _docComment;
+        private DocComment? _docComment;
 
-        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+        public override DocComment DocComment => (_docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this)))!;
 
-        private IEventCollection _events;
+        private IEventCollection? _events;
 
         public override IEventCollection Events => _events ?? (_events = EventImpl.FromMetadata(_metadata.Events, this, Settings));
 
-        private IFieldCollection _fields;
+        private IFieldCollection? _fields;
 
         public override IFieldCollection Fields => _fields ?? (_fields = FieldImpl.FromMetadata(_metadata.Fields, this, Settings));
 
-        private Class _baseClass;
+        private Class? _baseClass;
 
-        public override Class BaseClass => _baseClass ?? (_baseClass = FromMetadata(_metadata.BaseClass, this, Settings));
+        public override Class BaseClass => (_baseClass ?? (_baseClass = FromMetadata(_metadata.BaseClass, this, Settings)))!;
 
-        private Class _containingClass;
+        private Class? _containingClass;
 
-        public override Class ContainingClass => _containingClass ?? (_containingClass = FromMetadata(_metadata.ContainingClass, this, Settings));
+        public override Class ContainingClass => (_containingClass ?? (_containingClass = FromMetadata(_metadata.ContainingClass, this, Settings)))!;
 
-        private IInterfaceCollection _interfaces;
+        private IInterfaceCollection? _interfaces;
 
         public override IInterfaceCollection Interfaces => _interfaces ?? (_interfaces = InterfaceImpl.FromMetadata(_metadata.Interfaces, this, Settings));
 
-        private IMethodCollection _methods;
+        private IMethodCollection? _methods;
 
         public override IMethodCollection Methods => _methods ?? (_methods = MethodImpl.FromMetadata(_metadata.Methods, this, Settings));
 
-        private IPropertyCollection _properties;
+        private IPropertyCollection? _properties;
 
         public override IPropertyCollection Properties => _properties ?? (_properties = PropertyImpl.FromMetadata(GetPropertiesFromClassMetadata(_metadata.Properties), this, Settings));
 
-        private IStaticReadOnlyFieldCollection _staticReadOnlyFields;
+        private IStaticReadOnlyFieldCollection? _staticReadOnlyFields;
 
         public override IStaticReadOnlyFieldCollection StaticReadOnlyFields => _staticReadOnlyFields ?? (_staticReadOnlyFields = StaticReadOnlyFieldImpl.FromMetadata(_metadata.StaticReadOnlyFields, this, Settings));
 
-        private ITypeParameterCollection _typeParameters;
+        private ITypeParameterCollection? _typeParameters;
 
         public override ITypeParameterCollection TypeParameters => _typeParameters ?? (_typeParameters = TypeParameterImpl.FromMetadata(_metadata.TypeParameters, this));
 
-        private ITypeCollection _typeArguments;
+        private ITypeCollection? _typeArguments;
 
         public override ITypeCollection TypeArguments => _typeArguments ?? (_typeArguments = TypeImpl.FromMetadata(_metadata.TypeArguments, this, Settings));
 
-        private IClassCollection _nestedClasses;
+        private IClassCollection? _nestedClasses;
 
         public override IClassCollection NestedClasses => _nestedClasses ?? (_nestedClasses = FromMetadata(_metadata.NestedClasses, this, Settings));
 
-        private IEnumCollection _nestedEnums;
+        private IEnumCollection? _nestedEnums;
 
         public override IEnumCollection NestedEnums => _nestedEnums ?? (_nestedEnums = EnumImpl.FromMetadata(_metadata.NestedEnums, this, Settings));
 
-        private IInterfaceCollection _nestedInterfaces;
+        private IInterfaceCollection? _nestedInterfaces;
 
         public override IInterfaceCollection NestedInterfaces => _nestedInterfaces ?? (_nestedInterfaces = InterfaceImpl.FromMetadata(_metadata.NestedInterfaces, this, Settings));
 
@@ -119,7 +119,7 @@ namespace Typewriter.CodeModel.Implementation
             return new ClassCollectionImpl(metadata.Select(c => new ClassImpl(c, parent, settings)));
         }
 
-        public static Class FromMetadata(IClassMetadata metadata, Item parent, Settings settings)
+        public static Class? FromMetadata(IClassMetadata? metadata, Item parent, Settings settings)
         {
             return metadata == null ? null : new ClassImpl(metadata, parent, settings);
         }

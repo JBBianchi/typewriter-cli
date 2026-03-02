@@ -10,11 +10,11 @@ namespace Typewriter.CodeModel.Implementation
     {
         private readonly IPropertyMetadata _metadata;
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
-        private DocComment _docComment;
+        private DocComment? _docComment;
 
-        private Type _type;
+        private Type? _type;
 
         private PropertyImpl(IPropertyMetadata metadata, Item parent, Settings settings)
         {
@@ -45,9 +45,9 @@ namespace Typewriter.CodeModel.Implementation
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        public override DocComment DocComment => _docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this));
+        public override DocComment DocComment => (_docComment ?? (_docComment = DocCommentImpl.FromXml(_metadata.DocComment, this)))!;
 
-        public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this, Settings));
+        public override Type Type => (_type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this, Settings)))!;
 
         public static IPropertyCollection FromMetadata(IEnumerable<IPropertyMetadata> metadata, Item parent, Settings settings)
         {

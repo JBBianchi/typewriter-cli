@@ -33,13 +33,13 @@ namespace Typewriter.CodeModel.Implementation
 
         public override string DefaultValue => _metadata.DefaultValue;
 
-        private IAttributeCollection _attributes;
+        private IAttributeCollection? _attributes;
 
         public override IAttributeCollection Attributes => _attributes ?? (_attributes = AttributeImpl.FromMetadata(_metadata.Attributes, this, Settings));
 
-        private Type _type;
+        private Type? _type;
 
-        public override Type Type => _type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this, Settings));
+        public override Type Type => (_type ?? (_type = TypeImpl.FromMetadata(_metadata.Type, this, Settings)))!;
 
         public override string ToString()
         {
