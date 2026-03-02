@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-02 by Claude (Executor, T011)
+> Last touched: 2026-03-02 by Claude (Executor, T012)
 
 ## Current State
 
-- **Active milestone**: M1 - Core reuse extraction (CodeModel/Metadata)
-- **Status**: Done
+- **Active milestone**: M2 - CLI contract, diagnostics, and configuration precedence
+- **Status**: Not started
 - **Blocker**: None
-- **Next step**: Begin M2 (CLI contract, diagnostics, configuration precedence)
+- **Next step**: Implement `generate` command parser in `src/Typewriter.Cli`; implement `typewriter.json` loader and `IDiagnosticReporter` with `TW` code catalog
 
 ## Milestone Map
 
@@ -47,6 +47,7 @@
 | T009 Add NuGet refs to Typewriter.Metadata.Roslyn (#42) | M1 | Executor | Done | [T009-add-nuget-references-to-typewriter-metadata-roslyn.md](.ai/tasks/T009-add-nuget-references-to-typewriter-metadata-roslyn.md) — refs already present from T008; no file changes needed |
 | T010 Add/update unit tests for M1 ported code (#43) | M1 | Executor | Done | [T010-addupdate-unit-tests-for-m1.md](.ai/tasks/T010-addupdate-unit-tests-for-m1.md) — TypeMappingTests (CamelCase, GetTypeScriptName, GetOriginalName, IsPrimitive), CollectionTests (ItemCollectionImpl, ClassCollectionImpl, EnumCollectionImpl, FieldCollectionImpl), RoslynExtensionsTests (GetName, GetFullName, GetNamespace, GetFullTypeName); added Microsoft.CodeAnalysis.CSharp package ref to test project |
 | T011 Run M1 acceptance criteria (#44) | M1 | Executor | Done | [T011-run-m1-acceptance-criteria.md](.ai/tasks/T011-run-m1-acceptance-criteria.md) — build 0 errors; CodeModel 102/102; TypeMapping 71/71; zero VS refs confirmed; origin/ unchanged |
+| T012 Update .ai/progress.md for M1 (#45) | M1 | Executor | Done | progress.md updated: M1→Done, active milestone→M2, D-0004/D-0005 added, 3 new patterns added |
 
 ## Decisions
 
@@ -55,6 +56,8 @@
 | D-0001 | Target framework: `net10.0` everywhere | 2026-02-19 | See `_archive/.ai_CLAUDE/decisions/D-0001-target-framework.md` |
 | D-0002 | Primary distribution: `dotnet tool` | 2026-02-19 | See `_archive/.ai_CLAUDE/decisions/D-0002-packaging-strategy.md` |
 | D-0003 | Loading architecture: `ProjectGraph` + Roslyn workspace hybrid | 2026-02-19 | See `_archive/.ai_CLAUDE/decisions/D-0003-project-loading-strategy.md` |
+| D-0004 | `PartialRenderingMode.cs` moved from `Typewriter.CodeModel` to `Typewriter.Metadata` | 2026-03-02 | Breaks circular dependency; `namespace Typewriter.Configuration` kept for API compat. See T008. |
+| D-0005 | `ILog`/`Log` omitted from `Settings` abstract class for M1 | 2026-03-02 | Not consumed by CodeModel in M1; will be reconsidered for M2 CLI diagnostics wiring. See T007. |
 
 ## Open Questions
 
@@ -81,3 +84,6 @@ Note: Q1 (`IncludeProject(name)` ambiguity) was resolved — see `_archive/Q1-in
 - **Reuse policy**: "lift first, rewrite last" — copy upstream logic before considering a rewrite (see Section 4 of plan)
 - **Diagnostic codes**: `TWxxxx` format, MSBuild-compatible, ranges defined in README.md
 - **Archive convention**: Analysis-phase records in `_archive/.ai_CLAUDE/` and `_archive/.ai_CODEX/` use D/F/Q/R/PR/P-xxxx IDs
+- **Type alias disambiguation**: When `ImplicitUsings` is enabled, use `using Alias = Full.Namespace.Type;` file-scope aliases to resolve conflicts between `System.*` types (e.g., `System.Attribute`, `System.Enum`, `System.Type`) and `Typewriter.CodeModel.*` types of the same name. See T010 (CollectionTests.cs).
+- **Cross-project type moves**: When moving a type to a lower-dependency project to break a circular reference, keep the original `namespace` declaration unchanged to preserve API compatibility for consumers. See T008 (`PartialRenderingMode.cs`).
+- **Agent CI environment**: Install .NET SDK to `/tmp/dotnet` via `dotnet-install.sh` and set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` on Linux agents without ICU libraries. See T011.
