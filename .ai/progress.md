@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-02 by Claude (Executor, T031)
+> Last touched: 2026-03-02 by Claude (Executor, T032)
 
 ## Current State
 
 - **Active milestone**: M4 - MSBuild loading: `.sln` and `.slnx`
-- **Status**: In progress
+- **Status**: Not started
 - **Blocker**: None
-- **Next step**: Start M4 — SolutionGraphService for `.sln`/`.slnx` loading
+- **Next step**: MSBuild loading for `.sln` and `.slnx`
 
 ## Milestone Map
 
@@ -54,14 +54,14 @@
 | T016 Wire --fail-on-warnings and exit-code mapping (#63) | M2 | Executor | Done | [T016-application-runner-stub.md](.ai/tasks/T016-application-runner-stub.md) — `ApplicationRunner.cs` validation stub: empty-templates check, TW1002 for missing solution/project, FailOnWarnings→exit 1; `Placeholder.cs` deleted; 2 new `CliContractTests`; build 0 errors/warnings, 129 tests pass |
 | T017 Add M2 acceptance tests (#64) | M2 | Executor | Done | [T017-m2-acceptance-tests.md](.ai/tasks/T017-m2-acceptance-tests.md) — Verified 4 acceptance tests already in place from T013-T016: `CliContractTests` (2), `DiagnosticFormatTests.MsBuildStyleMessage_IsParseable` (1), `ConfigurationPrecedenceTests.CliOverridesConfigAndTemplate` (1); build 0 errors/warnings, 129 tests pass |
 | T018 Run M2 acceptance criteria (#65) | M2 | Executor | Done | [T018-run-m2-acceptance-criteria.md](.ai/tasks/T018-run-m2-acceptance-criteria.md) — restore/build/test all pass; 129/129 tests pass; origin/ unchanged; zero VS coupling in M2 .cs source files |
-| T020 Add NuGet package refs to Loading.MSBuild (#76) | M3 | Executor | Done | `Microsoft.Build` 17.14.28 + `Microsoft.Build.Locator` 1.11.2 with `ExcludeAssets="runtime"` on Microsoft.Build; restore/build 0 errors, 129/129 tests pass |
+| T020 Add NuGet package refs to Loading.MSBuild (#76) | M3 | Executor | Done | [T020-nuget-refs-loading-msbuild.md](.ai/tasks/T020-nuget-refs-loading-msbuild.md) — `Microsoft.Build 17.*` + `Microsoft.Build.Locator 1.*` with `ExcludeAssets="runtime"`; restore/build 0 errors, 129/129 tests pass |
 | T021 Create bridge DTOs ProjectLoadPlan.cs and LoadTarget.cs (#77) | M3 | Executor | Done | `src/Typewriter.Application/Orchestration/ProjectLoadPlan.cs` + `LoadTarget.cs`; build 0 errors/warnings |
 | T022 Expand DiagnosticCode.cs with TW2002, TW2003, TW2401 (#78) | M3 | Executor | Done | Added TW2002/TW2003 (Error) + TW2401 (Warning/Info) to `DiagnosticCode.cs`; build 0 errors/warnings |
 | T028 Create test fixture tests/fixtures/SimpleLib/SimpleLib.csproj (#79) | M3 | Executor | Done | `tests/fixtures/SimpleLib/SimpleLib.csproj` + `Class1.cs`; targets net10.0, no Typewriter refs |
 | T023 Implement IInputResolver and ResolvedInput in Loading.MSBuild (#80) | M3 | Executor | Done | `ResolvedInput.cs`, `IInputResolver.cs`, `InputResolver.cs` in `src/Typewriter.Loading.MSBuild/`; inverted dep (Loading.MSBuild → Application); build 0 errors/warnings |
 | T025 Implement MsBuildLocatorService in Loading.MSBuild (#81) | M3 | Executor | Done | `IMsBuildLocatorService.cs` + `MsBuildLocatorService.cs` in `src/Typewriter.Loading.MSBuild/`; Interlocked one-shot guard, TW2001 on failure; build 0 errors/warnings |
 | T024 Implement IRestoreService and RestoreService in Loading.MSBuild (#82) | M3 | Executor | Done | `IRestoreService.cs` + `RestoreService.cs` in `src/Typewriter.Loading.MSBuild/`; CheckAssetsAsync checks obj/project.assets.json, RestoreAsync runs dotnet restore and emits TW2001 on failure; build 0 errors/warnings |
-| T026 Implement IProjectGraphService and ProjectGraphService in Loading.MSBuild (#83) | M3 | Executor | Done | `IProjectGraphService.cs` + `ProjectGraphService.cs` in `src/Typewriter.Loading.MSBuild/`; Kahn's topological sort with path tie-breaker, multi-target selection (TW2401), TFM filtering (TW2002), assets check (TW2003); build 0 errors/warnings |
+| T026 Implement IProjectGraphService and ProjectGraphService in Loading.MSBuild (#83) | M3 | Executor | Done | [T026-project-graph-service.md](.ai/tasks/T026-project-graph-service.md) — `IProjectGraphService.cs` + `ProjectGraphService.cs`; Kahn's topological sort with path tie-breaker, multi-target selection (TW2401), TFM filtering (TW2002), assets check (TW2003); build 0 errors/warnings |
 | T027 Wire ApplicationRunner to MSBuild loading services (#84) | M3 | Executor | Done | [T027-wire-applicationrunner-to-msbuild.md](.ai/tasks/T027-wire-applicationrunner-to-msbuild.md) — Moved service interfaces to `Typewriter.Application.Loading`; `ApplicationRunner` full pipeline: resolve→restore→graph; `Program.cs` composes concrete services; build 0 errors/warnings, 129/129 tests pass |
 | T029 Add M3 unit tests for ProjectLoader (#85) | M3 | Executor | Done | `tests/Typewriter.UnitTests/Loading/ProjectLoaderTests.cs` — 3 NSubstitute tests: assets-exist (no restore), missing-assets without restore (TW2003), restore path; NSubstitute 5.x added to test project; all 3 tests pass |
 | T030 Add integration test CsprojIntegrationTests (#86) | M3 | Executor | Done | `tests/Typewriter.IntegrationTests/Loading/CsprojIntegrationTests.cs` — real-services pipeline test: InputResolver→RestoreService→ProjectGraphService; loads SimpleLib fixture; validates plan.Targets[0].TargetFramework=="net10.0"; MSBuildLocator registered before BuildPlanAsync call; 132/132 tests pass |
@@ -78,6 +78,8 @@
 | D-0005 | `ILog`/`Log` omitted from `Settings` abstract class for M1 | 2026-03-02 | Not consumed by CodeModel in M1; will be reconsidered for M2 CLI diagnostics wiring. See T007. |
 | D-0006 | `System.CommandLine` pinned to `2.0.0-beta4.22272.1` | 2026-03-02 | Prerelease 2.x targets `netstandard2.0`, provides stable API shape for the `CommandLineBuilder`+`UseDefaults()` pattern; avoids 1.x→2.x breaking API changes. See T013. |
 | D-0007 | `typewriter.json` discovery stops at `.git` boundary | 2026-03-02 | Upward-walk terminates at the first directory containing `.git/` (repo root) to prevent config files from unrelated parent repos from silently applying. See T015. |
+| D-0008 | `Microsoft.Build` referenced with `ExcludeAssets="runtime"` | 2026-03-02 | MSBuildLocator dynamically loads MSBuild assemblies from the SDK-installed location at runtime; shipping our own copies in the output directory would conflict. Major-wildcard version (`17.*`) avoids lock-step bumps while MSBuildLocator controls the actual DLL resolved. See [T020](tasks/T020-nuget-refs-loading-msbuild.md). |
+| D-0009 | One-shot MSBuild registration guard via `Interlocked.CompareExchange` | 2026-03-02 | `MSBuildLocator.RegisterDefaults()` throws `InvalidOperationException` on a second call in the same process. A static `int _registered` field flipped atomically with `Interlocked.CompareExchange(ref _registered, 1, 0)` makes `EnsureRegistered()` idempotent without locks. See T025. |
 
 ## Open Questions
 
@@ -109,3 +111,6 @@ Note: Q1 (`IncludeProject(name)` ambiguity) was resolved — see `_archive/Q1-in
 - **Agent CI environment**: Install .NET SDK to `/tmp/dotnet` via `dotnet-install.sh` and set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` on Linux agents without ICU libraries. See T011.
 - **ApplicationRunner stub pattern**: Implement the pipeline orchestrator as a validation-only stub in the milestone that establishes the CLI contract; defer the full load→metadata→render→write pipeline to the milestone that delivers the required dependencies. Allows acceptance tests to pass immediately. See T016.
 - **IDiagnosticReporter injection**: Pass `IDiagnosticReporter` into `RunAsync()` rather than the constructor so each invocation gets a fresh reporter; use a `FakeDiagnosticReporter` with pre-seeded counts in unit tests to verify `--fail-on-warnings` without real console output. See T016.
+- **MsBuildLocatorService one-shot guard**: Use `static int _registered` + `Interlocked.CompareExchange(ref _registered, 1, 0) == 0` to make any single-call-only MSBuild registration idempotent; first caller registers, subsequent callers are silently no-ops. See T025, D-0009.
+- **`dotnet restore` stderr capture convention**: Spawn `dotnet restore <path>` with `RedirectStandardError=true`; capture `StandardError.ReadToEndAsync()` before `WaitForExitAsync()`; on non-zero exit, emit TW2001 with the stderr body trimmed. See T024 (`RestoreService.cs`).
+- **`project.assets.json` presence check convention**: Existence of `<project-dir>/obj/project.assets.json` is the canonical indicator of a successful restore; checked by both `RestoreService.CheckAssetsAsync` and `ProjectGraphService.BuildPlanAsync` to emit TW2003 when missing. See T024/T026.
