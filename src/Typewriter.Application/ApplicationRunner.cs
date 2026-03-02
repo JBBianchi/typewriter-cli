@@ -1,3 +1,5 @@
+using Typewriter.Application.Diagnostics;
+
 namespace Typewriter.Application;
 
 /// <summary>
