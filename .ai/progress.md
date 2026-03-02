@@ -7,7 +7,7 @@
 - **Active milestone**: M1 - Core reuse extraction (CodeModel/Metadata)
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: T002–T008 — port clean files into new project structure; rewrite 4 VS-coupled files
+- **Next step**: T003–T008 — port remaining clean files (collections, implementations, helpers, Roslyn); rewrite 4 VS-coupled files
 
 ## Milestone Map
 
@@ -37,6 +37,7 @@
 | #23 Verify M0 acceptance criteria | M0 | Executor | Done | Build/test/pack/tool-install verified; .gitignore added; SDK warnings suppressed |
 | #24 Update .ai/progress.md for M0 | M0 | Executor | Done | Progress tracker created with all §14 sections; M0 status documented |
 | T001 M1 compat checklist audit | M1 | Executor | Done | [T001-m1-compat-checklist.md](.ai/tasks/T001-m1-compat-checklist.md) — 77/81 files clean, 4 VS-coupled confirmed |
+| T002 Port metadata interfaces (#35) | M1 | Executor | Done | [T002-port-metadata-interfaces.md](.ai/tasks/T002-port-metadata-interfaces.md) — 19 I*.cs files in `src/Typewriter.Metadata/Interfaces/` |
 
 ## Decisions
 
