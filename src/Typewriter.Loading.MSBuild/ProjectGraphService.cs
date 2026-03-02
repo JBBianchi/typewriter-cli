@@ -1,5 +1,6 @@
 using Microsoft.Build.Graph;
 using Typewriter.Application.Diagnostics;
+using Typewriter.Application.Loading;
 using Typewriter.Application.Orchestration;
 
 namespace Typewriter.Loading.MSBuild;

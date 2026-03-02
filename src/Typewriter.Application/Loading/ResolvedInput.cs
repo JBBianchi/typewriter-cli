@@ -1,3 +1,3 @@
-namespace Typewriter.Loading.MSBuild;
+namespace Typewriter.Application.Loading;
 
 public record ResolvedInput(string ProjectPath, string? SolutionDirectory);

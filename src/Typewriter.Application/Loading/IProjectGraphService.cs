@@ -1,7 +1,7 @@
 using Typewriter.Application.Diagnostics;
 using Typewriter.Application.Orchestration;
 
-namespace Typewriter.Loading.MSBuild;
+namespace Typewriter.Application.Loading;
 
 public interface IProjectGraphService
 {

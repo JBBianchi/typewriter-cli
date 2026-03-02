@@ -1,5 +1,7 @@
 using Typewriter.Application;
 using Typewriter.Application.Diagnostics;
+using Typewriter.Application.Loading;
+using Typewriter.Application.Orchestration;
 using Xunit;
 
 namespace Typewriter.UnitTests.Cli;
@@ -27,10 +29,46 @@ public class CliContractTests
         public int ErrorCount => _errorCount;
     }
 
+    /// <summary>Input resolver stub that always returns a successful resolved input.</summary>
+    private sealed class StubInputResolver : IInputResolver
+    {
+        public Task<ResolvedInput?> ResolveAsync(string projectPath, IDiagnosticReporter reporter, CancellationToken ct = default)
+            => Task.FromResult<ResolvedInput?>(new ResolvedInput(projectPath, null));
+    }
+
+    /// <summary>Restore service stub that reports assets as present.</summary>
+    private sealed class StubRestoreService : IRestoreService
+    {
+        public Task<bool> CheckAssetsAsync(string projectPath, CancellationToken ct = default)
+            => Task.FromResult(true);
+
+        public Task<bool> RestoreAsync(string projectPath, IDiagnosticReporter reporter, CancellationToken ct = default)
+            => Task.FromResult(true);
+    }
+
+    /// <summary>Project graph service stub that returns an empty but non-null load plan.</summary>
+    private sealed class StubProjectGraphService : IProjectGraphService
+    {
+        public Task<ProjectLoadPlan?> BuildPlanAsync(
+            ResolvedInput input,
+            string? framework,
+            string? configuration,
+            string? runtime,
+            IDiagnosticReporter reporter,
+            CancellationToken ct = default)
+        {
+            var plan = new ProjectLoadPlan(input.ProjectPath, input.SolutionDirectory, [], new Dictionary<string, string>());
+            return Task.FromResult<ProjectLoadPlan?>(plan);
+        }
+    }
+
+    private static ApplicationRunner CreateRunner()
+        => new ApplicationRunner(new StubInputResolver(), new StubRestoreService(), new StubProjectGraphService());
+
     [Fact]
     public async Task Generate_InvalidArgs_Returns2()
     {
-        var runner = new ApplicationRunner();
+        var runner = CreateRunner();
         var reporter = new FakeDiagnosticReporter();
 
         // Empty templates + no solution/project → exit code 2
@@ -55,7 +93,7 @@ public class CliContractTests
     [Fact]
     public async Task Generate_WarningsWithFailFlag_Returns1()
     {
-        var runner = new ApplicationRunner();
+        var runner = CreateRunner();
         // Pre-seed the reporter with 1 warning to simulate a prior warning being reported.
         var reporter = new FakeDiagnosticReporter(warningCount: 1);
 
