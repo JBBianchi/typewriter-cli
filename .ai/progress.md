@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-02 by Claude (Executor, T015)
+> Last touched: 2026-03-02 by Claude (Executor, T016)
 
 ## Current State
 
 - **Active milestone**: M2 - CLI contract, diagnostics, and configuration precedence
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: Implement `--fail-on-warnings` behavior and full `ApplicationRunner` pipeline (T016)
+- **Next step**: Begin M3 — MSBuild project loading pipeline (T017+)
 
 ## Milestone Map
 
@@ -15,7 +15,7 @@
 |-----------|------|--------|-------|
 | M0 | Repo bootstrap and packaging skeleton | Done | All acceptance criteria verified: build, test, pack, tool install |
 | M1 | Core reuse extraction (CodeModel/Metadata) | Done | All acceptance criteria verified: build 0 errors, CodeModel 102/102, TypeMapping 71/71, zero VS refs |
-| M2 | CLI contract, diagnostics, and configuration precedence | In progress | T013 done: `generate` parser, stubs; T014 done: `Diagnostics/` infrastructure, `MsBuildDiagnosticReporter`, TW code catalog; T015 done: `typewriter.json` loader, `GenerateCommandOptions` record with `Merge()` |
+| M2 | CLI contract, diagnostics, and configuration precedence | Done | T013–T016 done: CLI parser, diagnostics infrastructure, config loader, ApplicationRunner validation stub with exit-code mapping |
 | M3 | MSBuild loading: `.csproj` and restore pipeline | Not started | |
 | M4 | MSBuild loading: `.sln` and `.slnx` | Not started | |
 | M5 | Semantic model extraction parity | Not started | |
@@ -51,6 +51,7 @@
 | T013 Implement generate command parser (#60) | M2 | Executor | Done | [T013-implement-generate-command-parse.md](.ai/tasks/T013-implement-generate-command-parse.md) — `Program.cs` rewrite with `System.CommandLine` 2.0.0-beta4; `GenerateCommandOptions`, `IDiagnosticReporter`, `ApplicationRunner` stubs; `ConsoleDiagnosticReporter`; build 0 errors/warnings |
 | T014 IDiagnosticReporter + TW code catalog (#61) | M2 | Executor | Done | [T014-implement-idiagnosticreporter-and-tw-code-catalog.md](.ai/tasks/T014-implement-idiagnosticreporter-and-tw-code-catalog.md) — `Diagnostics/` folder: severity enum, code constants, message record, interface, `MsBuildDiagnosticReporter`; 8 new tests; build 0 errors/warnings |
 | T015 typewriter.json loader + precedence merge (#62) | M2 | Executor | Done | [T015-implement-typewriterjson-loader.md](.ai/tasks/T015-implement-typewriterjson-loader.md) — `Configuration/TypewriterConfig.cs`, `TypewriterConfigLoader.cs`; `GenerateCommandOptions` → record + `Merge()`; 8 new tests; build 0 errors/warnings |
+| T016 Wire --fail-on-warnings and exit-code mapping (#63) | M2 | Executor | Done | `ApplicationRunner.cs` validation stub: empty-templates check, TW1002 for missing solution/project, FailOnWarnings→exit 1; `Placeholder.cs` deleted; 2 new `CliContractTests`; build 0 errors/warnings, 129 tests pass |
 
 ## Decisions
 
