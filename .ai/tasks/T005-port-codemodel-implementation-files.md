@@ -31,6 +31,8 @@ Port all 19 `*Impl.cs` files + `DocComment.cs` from `origin/src/Typewriter/CodeM
 - `docnet` not available in execution environment; build verification deferred to CI.
 - Verified `origin/` unchanged: `git diff --name-only origin/` returned empty.
 - Verified zero VS/COM refs in all created files.
+- CI revealed 3 nullable errors (commit 71d2d69 fixed some, but 3 remained): CS8602 in DocComment.cs lines 22/26 (double `.Element()` call) and CS8604 in Helpers.cs line 115 (`FirstOrDefault()` → nullable arg).
+- Final CI fix (commit eb72afa): DocComment.cs — capture XElement in local var with `is { }` pattern; Helpers.cs — use `typeArguments[0]` (non-nullable index) since count==1 is already checked.
 
 ## Outcome
 
