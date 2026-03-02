@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.*" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Typewriter.Metadata\Typewriter.Metadata.csproj" />
     <ProjectReference Include="..\Typewriter.CodeModel\Typewriter.CodeModel.csproj" />
   </ItemGroup>

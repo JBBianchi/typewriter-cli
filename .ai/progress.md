@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-02 by Claude (Executor, T007)
+> Last touched: 2026-03-02 by Claude (Executor, T008)
 
 ## Current State
 
 - **Active milestone**: M1 - Core reuse extraction (CodeModel/Metadata)
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: T008 — port Roslyn metadata wrappers (18 clean files from `origin/src/Roslyn/`)
+- **Next step**: T009 — wire up `RoslynMetadataProvider` (deferred; see M5 scope)
 
 ## Milestone Map
 
@@ -43,6 +43,7 @@
 | T005 Port CodeModel impl files (#38) | M1 | Executor | Done | [T005-port-codemodel-implementation-files.md](.ai/tasks/T005-port-codemodel-implementation-files.md) — Helpers.cs + 19 Implementation files in `src/Typewriter.CodeModel/`; Settings stub extended |
 | T006 Port Helpers.cs type-mapping (#39) | M1 | Executor | Done | [T006-port-helpers-type-mapping.md](.ai/tasks/T006-port-helpers-type-mapping.md) — `src/Typewriter.CodeModel/Helpers.cs` already in place from T005; verified all acceptance criteria |
 | T007 Stub/rewrite VS-coupled config (#40) | M1 | Executor | Done | [T007-stubrewrite-vs-coupled-config.md](.ai/tasks/T007-stubrewrite-vs-coupled-config.md) — `SettingsImpl.cs` + `ProjectHelpers.cs` created; `Settings.cs` expanded; zero VS refs |
+| T008 Port Roslyn metadata wrappers (#41) | M1 | Executor | Done | [T008-port-roslyn-metadata-wrappers.md](.ai/tasks/T008-port-roslyn-metadata-wrappers.md) — 19 files in `src/Typewriter.Metadata.Roslyn/`; `PartialRenderingMode` moved to `Typewriter.Metadata`; minimal `RoslynFileMetadata` stub |
 
 ## Decisions
 
