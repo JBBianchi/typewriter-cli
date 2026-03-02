@@ -1,5 +1,4 @@
 using Typewriter.Metadata;
-using Typewriter.Metadata.Interfaces;
 
 namespace Typewriter.CodeModel.Implementation
 {

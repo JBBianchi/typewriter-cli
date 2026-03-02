@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Typewriter.CodeModel.Collections;
-using Typewriter.Metadata.Interfaces;
 using static Typewriter.CodeModel.Helpers;
 
 namespace Typewriter.CodeModel.Implementation
