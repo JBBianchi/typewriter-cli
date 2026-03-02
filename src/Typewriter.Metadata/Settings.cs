@@ -1,3 +1,5 @@
+using Typewriter.Configuration;
+
 namespace Typewriter.Metadata;
 
 /// <summary>
@@ -5,14 +7,18 @@ namespace Typewriter.Metadata;
 /// </summary>
 /// <remarks>
 /// This is the CLI-portable abstract base class. Members that would require
-/// cross-project type references (<c>PartialRenderingMode</c>,
-/// <c>Typewriter.CodeModel.File</c>) or VS-host types (<c>EnvDTE</c>,
-/// <c>ILog</c>) are intentionally omitted here to avoid circular project
-/// dependencies. Concrete CLI implementations live in
-/// <c>Typewriter.CodeModel.Configuration.SettingsImpl</c> and add those members.
+/// cross-project type references (<c>Typewriter.CodeModel.File</c>) or
+/// VS-host types (<c>EnvDTE</c>, <c>ILog</c>) are intentionally omitted here
+/// to avoid circular project dependencies. Concrete CLI implementations live
+/// in <c>Typewriter.CodeModel.Configuration.SettingsImpl</c> and add those members.
 /// </remarks>
 public abstract class Settings
 {
+    /// <summary>
+    /// Gets or sets a value indicating how partial classes and interfaces are rendered.
+    /// </summary>
+    public PartialRenderingMode PartialRenderingMode { get; set; } = PartialRenderingMode.Partial;
+
     /// <summary>
     /// Gets or sets the file extension for output files.
     /// </summary>

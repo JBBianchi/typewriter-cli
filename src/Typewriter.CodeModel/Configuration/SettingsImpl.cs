@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Typewriter.Configuration;
 using Typewriter.Metadata;
 
 namespace Typewriter.CodeModel.Configuration;
@@ -55,11 +54,6 @@ public class SettingsImpl : Settings
     // Concrete members not present on the abstract base (require CodeModel types
     // or would cause circular project-reference dependencies if placed there).
     // -------------------------------------------------------------------------
-
-    /// <summary>
-    /// Gets or sets a value indicating how partial classes and interfaces are rendered.
-    /// </summary>
-    public PartialRenderingMode PartialRenderingMode { get; set; } = PartialRenderingMode.Partial;
 
     /// <summary>
     /// Gets or sets a factory that maps a rendered <see cref="File"/> to its output
