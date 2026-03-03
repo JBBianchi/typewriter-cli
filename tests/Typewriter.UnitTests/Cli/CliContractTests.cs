@@ -71,8 +71,7 @@ public class CliContractTests
             ProjectLoadPlan plan,
             IDiagnosticReporter reporter,
             CancellationToken ct = default)
-            => Task.FromResult<WorkspaceLoadResult?>(
-                new WorkspaceLoadResult(new List<(RoslynProject, RoslynCompilation)>()));
+            => Task.FromResult<WorkspaceLoadResult?>(new WorkspaceLoadResult([]));
     }
 
     private static ApplicationRunner CreateRunner()
