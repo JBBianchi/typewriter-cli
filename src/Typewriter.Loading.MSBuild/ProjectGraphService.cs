@@ -8,12 +8,12 @@ namespace Typewriter.Loading.MSBuild;
 public sealed class ProjectGraphService : IProjectGraphService
 {
     private readonly IMsBuildLocatorService _locatorService;
-    private readonly ISolutionFallbackService _fallbackService;
+    private readonly ISolutionFallbackService _solutionFallbackService;
 
-    public ProjectGraphService(IMsBuildLocatorService locatorService, ISolutionFallbackService fallbackService)
+    public ProjectGraphService(IMsBuildLocatorService locatorService, ISolutionFallbackService solutionFallbackService)
     {
         _locatorService = locatorService;
-        _fallbackService = fallbackService;
+        _solutionFallbackService = solutionFallbackService;
     }
 
     public async Task<ProjectLoadPlan?> BuildPlanAsync(
@@ -60,7 +60,7 @@ public sealed class ProjectGraphService : IProjectGraphService
                 return null;
 
             // .slnx fallback: enumerate projects via SolutionFallbackService
-            var fallbackPaths = await _fallbackService.ListProjectPathsAsync(input.ProjectPath, reporter, ct);
+            var fallbackPaths = await _solutionFallbackService.ListProjectPathsAsync(input.ProjectPath, reporter, ct);
             if (fallbackPaths == null || fallbackPaths.Count == 0)
                 return null;
 

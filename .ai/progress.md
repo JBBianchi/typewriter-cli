@@ -7,7 +7,7 @@
 - **Active milestone**: M4 - MSBuild loading: `.sln` and `.slnx`
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: Implement SolutionFallbackService and ProjectGraph sln/slnx loading
+- **Next step**: Implement sln/slnx loading logic in ProjectGraphService using SolutionFallbackService
 
 ## Milestone Map
 
@@ -73,6 +73,7 @@
 | #119 Implement SolutionFallbackService | M4 | Executor | Done | `src/Typewriter.Loading.MSBuild/SolutionFallbackService.cs`; implements ISolutionFallbackService; spawns `dotnet sln <path> list`, parses stdout, resolves relative→absolute paths; TW2310 on non-zero exit; build 0 errors/warnings |
 | #120 Create solution-slnx test fixture | M4 | Executor | Done | `tests/fixtures/solution-slnx/SolutionSlnx.slnx` + independent ProjectA + ProjectB copies (Option B); valid XML; targets net10.0 |
 | #121 Extend ProjectGraphService with .slnx fallback support | M4 | Executor | Done | `ProjectGraphService` now accepts `ISolutionFallbackService`; TW2110 on ProjectGraph failure for .sln/.slnx; .slnx fallback via `ListProjectPathsAsync`; 5 new integration tests; build 0 errors/warnings |
+| #122 Compose SolutionFallbackService in Program.cs | M4 | Executor | Done | `ProjectGraphService` constructor updated to accept `ISolutionFallbackService`; `Program.cs` instantiates `SolutionFallbackService` and passes it in; `CsprojIntegrationTests` updated to match new ctor signature |
 
 ## Decisions
 
