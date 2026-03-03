@@ -1,6 +1,6 @@
 # Progress Tracker
 
-> Last touched: 2026-03-03 by Claude (Executor, #124)
+> Last touched: 2026-03-03 by Claude (Executor, #127)
 
 ## Current State
 
@@ -18,7 +18,7 @@
 | M2 | CLI contract, diagnostics, and configuration precedence | Done | T013–T018 done: CLI parser, diagnostics infrastructure, config loader, ApplicationRunner validation stub with exit-code mapping; all M2 acceptance tests verified (129/129 pass) |
 | M3 | MSBuild loading: `.csproj` and restore pipeline | Done | All acceptance criteria verified: restore/build 0 errors, 133/133 tests pass, origin/ unchanged, zero VS coupling |
 | M4 | MSBuild loading: `.sln` and `.slnx` | Done | All acceptance criteria verified: restore/build 0 errors, 150/150 tests pass, all 4 SolutionLoaderTests green, TW2110/TW2310 covered, InputResolver accepts .sln/.slnx, origin/ unchanged, zero VS refs |
-| M5 | Semantic model extraction parity | Not started | |
+| M5 | Semantic model extraction parity | In progress | #127 added Microsoft.CodeAnalysis.Workspaces.MSBuild 4.* ref + MSBL001 suppression across projects |
 | M6 | Template execution and output management | Not started | |
 | M7 | Golden parity and fixture repos | Not started | |
 | M8 | CI pipelines and release readiness | In progress | eng/versioning.props created (#166) |
@@ -76,6 +76,7 @@
 | #122 Compose SolutionFallbackService in Program.cs | M4 | Executor | Done | `ProjectGraphService` constructor updated to accept `ISolutionFallbackService`; `Program.cs` instantiates `SolutionFallbackService` and passes it in; `CsprojIntegrationTests` updated to match new ctor signature |
 | #123 Add SolutionLoaderTests integration tests | M4 | Executor | Done | `SolutionLoader.cs` + `SolutionLoaderTests.cs`; 4 tests: Sln_LoadsExpectedProjects, Slnx_LoadsExpectedProjects, SlnAndSlnx_ProduceSameTraversalPlan, Slnx_WhenGraphFails_UsesFallback; TW2110/TW2310 exercised |
 | #124 Run M4 acceptance criteria verification | M4 | Executor | Done | restore/build/test all pass; 150/150 tests; all 4 SolutionLoaderTests green; TW2310 test added (`SolutionFallbackService_NonExistentSolution_EmitsTW2310`); origin/ unchanged; zero VS coupling |
+| #127 Add Microsoft.CodeAnalysis.Workspaces.MSBuild NuGet ref | M5 | Executor | Done | Added `Microsoft.CodeAnalysis.Workspaces.MSBuild 4.*` to `Loading.MSBuild.csproj`; added companion MSBuild 17.* ExcludeAssets="runtime" refs to all projects to suppress MSBL001; restore/build 0 errors, 136 unit tests pass |
 
 ## Decisions
 
