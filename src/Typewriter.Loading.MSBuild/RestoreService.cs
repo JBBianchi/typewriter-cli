@@ -15,7 +15,10 @@ public sealed class RestoreService : IRestoreService
 
     public async Task<bool> RestoreAsync(string projectPath, IDiagnosticReporter reporter, CancellationToken ct = default)
     {
-        var psi = new ProcessStartInfo("dotnet", $"restore \"{projectPath}\"")
+        // -nodeReuse:false prevents MSBuild worker nodes from staying alive after restore.
+        // Worker nodes that survive inherit the redirected stderr pipe handle, which causes
+        // StandardError.ReadToEndAsync to hang indefinitely waiting for EOF.
+        var psi = new ProcessStartInfo("dotnet", $"restore \"{projectPath}\" -nodeReuse:false")
         {
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -24,8 +27,9 @@ public sealed class RestoreService : IRestoreService
         using var process = new Process { StartInfo = psi };
         process.Start();
 
-        var stderr = await process.StandardError.ReadToEndAsync(ct);
+        var stderrTask = process.StandardError.ReadToEndAsync(ct);
         await process.WaitForExitAsync(ct);
+        var stderr = await stderrTask;
 
         if (process.ExitCode != 0)
         {
