@@ -1,6 +1,6 @@
 # Progress Tracker
 
-> Last touched: 2026-03-03 by Claude (Executor, #124)
+> Last touched: 2026-03-03 by Claude (Executor, #128)
 
 ## Current State
 
@@ -77,6 +77,7 @@
 | #123 Add SolutionLoaderTests integration tests | M4 | Executor | Done | `SolutionLoader.cs` + `SolutionLoaderTests.cs`; 4 tests: Sln_LoadsExpectedProjects, Slnx_LoadsExpectedProjects, SlnAndSlnx_ProduceSameTraversalPlan, Slnx_WhenGraphFails_UsesFallback; TW2110/TW2310 exercised |
 | #124 Run M4 acceptance criteria verification | M4 | Executor | Done | restore/build/test all pass; 150/150 tests; all 4 SolutionLoaderTests green; TW2310 test added (`SolutionFallbackService_NonExistentSolution_EmitsTW2310`); origin/ unchanged; zero VS coupling |
 | #125 Add TW2200–TW2205 workspace diagnostic codes | M5 | Executor | Done | Added TW2200 (Error, workspace load failure), TW2201 (Warning, non-fatal workspace diagnostic), TW2202 (Error, compilation failure), TW2203 (Error, project not found), TW2204 (Error, unresolved project reference), TW2205 (Warning, partial documents); build 0 errors/warnings |
+| #128 Create source-generator test fixture | M5 | Executor | Done | `SourceGenLib.csproj` (net10.0) + `Class1.cs`; `SourceGenerator/` (netstandard2.0, HelloWorldGenerator IIncrementalGenerator); `SourceGenFixtureTests` verifies `GetTypesByMetadataName("SourceGenLib.GeneratedHelper")` returns non-empty; IntegrationTests.csproj updated (exclusions + SourceGenerator ref); build 0 errors/warnings, test passes |
 
 ## Decisions
 
@@ -98,7 +99,7 @@
 |----|----------|--------|--------|--------|
 | Q2 | How is upstream `requestRender` callback mirrored in batch mode? | 2026-02-19 | Design notes in `_archive/Q2-request-render-batch-mode-resolution-notes.md` | M5 |
 | Q3 | Should v1 mutate project files? | 2026-02-19 | Default no; revisit post-v1 | M8 |
-| Q4 | Are source-generated symbols visible in workspace pipeline? | 2026-02-19 | Open — needs generator fixture | M5 |
+| Q4 | Are source-generated symbols visible in workspace pipeline? | 2026-02-19 | Fixture confirmed: `HelloWorldGenerator` (IIncrementalGenerator) produces `SourceGenLib.GeneratedHelper`; `Compilation.GetTypesByMetadataName` returns non-empty after `RunGeneratorsAndUpdateCompilation`. Full workspace integration TBD. | M5 |
 | Q5 | Is `.slnx` fallback needed in practice? | 2026-02-19 | Resolved — `Slnx_WhenGraphFails_UsesFallback` confirms fallback path works; `SolutionFallbackService` uses `dotnet sln list` as robust cross-platform fallback | M4 |
 | Q6 | Watch mode in v1 or post-v1? | 2026-02-19 | Deferred unless required for release | M9 |
 
