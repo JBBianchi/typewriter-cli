@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-03 by Claude (Executor, #130)
+> Last touched: 2026-03-03 by Claude (Executor, #132)
 
 ## Current State
 
 - **Active milestone**: M5 - Semantic model extraction parity
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: Wire RoslynWorkspaceService into ApplicationRunner pipeline (M5 continuation)
+- **Next step**: Implement metadata extraction (M6 — template execution and output management)
 
 ## Milestone Map
 
@@ -18,7 +18,7 @@
 | M2 | CLI contract, diagnostics, and configuration precedence | Done | T013–T018 done: CLI parser, diagnostics infrastructure, config loader, ApplicationRunner validation stub with exit-code mapping; all M2 acceptance tests verified (129/129 pass) |
 | M3 | MSBuild loading: `.csproj` and restore pipeline | Done | All acceptance criteria verified: restore/build 0 errors, 133/133 tests pass, origin/ unchanged, zero VS coupling |
 | M4 | MSBuild loading: `.sln` and `.slnx` | Done | All acceptance criteria verified: restore/build 0 errors, 150/150 tests pass, all 4 SolutionLoaderTests green, TW2110/TW2310 covered, InputResolver accepts .sln/.slnx, origin/ unchanged, zero VS refs |
-| M5 | Semantic model extraction parity | In progress | #127 added Microsoft.CodeAnalysis.Workspaces.MSBuild 4.* ref + MSBL001 suppression; WorkspaceLoadResult DTO (#126); source-gen fixture (#128); IRoslynWorkspaceService (#129) |
+| M5 | Semantic model extraction parity | In progress | #127 added Microsoft.CodeAnalysis.Workspaces.MSBuild 4.* ref + MSBL001 suppression; WorkspaceLoadResult DTO (#126); source-gen fixture (#128); IRoslynWorkspaceService (#129); RoslynWorkspaceService (#130); IRoslynWorkspaceService wired into ApplicationRunner (#132) |
 | M6 | Template execution and output management | Not started | |
 | M7 | Golden parity and fixture repos | Not started | |
 | M8 | CI pipelines and release readiness | In progress | eng/versioning.props created (#166) |
@@ -82,6 +82,7 @@
 | #128 Create source-generator test fixture | M5 | Executor | Done | `SourceGenLib.csproj` (net10.0) + `Class1.cs`; `SourceGenerator/` (netstandard2.0, HelloWorldGenerator IIncrementalGenerator); `SourceGenFixtureTests` verifies `GetTypesByMetadataName("SourceGenLib.GeneratedHelper")` returns non-empty; IntegrationTests.csproj updated (exclusions + SourceGenerator ref); build 0 errors/warnings, test passes |
 | #129 Create IRoslynWorkspaceService interface | M5 | Executor | Done | `src/Typewriter.Application/Loading/IRoslynWorkspaceService.cs`; `LoadAsync(ProjectLoadPlan, IDiagnosticReporter, CancellationToken)` returning `Task<WorkspaceLoadResult?>`; no MSBuild types; build 0 errors/warnings |
 | #130 Implement RoslynWorkspaceService | M5 | Executor | Done | `src/Typewriter.Loading.MSBuild/RoslynWorkspaceService.cs`; MSBuildWorkspace.Create from GlobalProperties; OpenProjectAsync per LoadTarget; workspace diagnostics → TW2200/TW2201; null/error compilation → TW2202; returns WorkspaceLoadResult; build 0 errors/warnings |
+| #132 Wire IRoslynWorkspaceService into ApplicationRunner | M5 | Executor | Done | `ApplicationRunner` constructor gains `IRoslynWorkspaceService`; `LoadAsync` called after `BuildPlanAsync`; null return → TW2200 + exit 3; `WorkspaceLoadResult` stored for M6; `Program.cs` composes `RoslynWorkspaceService`; unit tests updated; build 0 errors, 151/151 tests pass |
 
 ## Decisions
 

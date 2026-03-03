@@ -62,8 +62,22 @@ public class CliContractTests
         }
     }
 
+    /// <summary>Roslyn workspace service stub that returns an empty but non-null workspace result.</summary>
+    private sealed class StubRoslynWorkspaceService : IRoslynWorkspaceService
+    {
+        public Task<WorkspaceLoadResult?> LoadAsync(
+            ProjectLoadPlan plan,
+            IDiagnosticReporter reporter,
+            CancellationToken ct = default)
+            => Task.FromResult<WorkspaceLoadResult?>(new WorkspaceLoadResult([]));
+    }
+
     private static ApplicationRunner CreateRunner()
-        => new ApplicationRunner(new StubInputResolver(), new StubRestoreService(), new StubProjectGraphService());
+        => new ApplicationRunner(
+            new StubInputResolver(),
+            new StubRestoreService(),
+            new StubProjectGraphService(),
+            new StubRoslynWorkspaceService());
 
     [Fact]
     public async Task Generate_InvalidArgs_Returns2()
