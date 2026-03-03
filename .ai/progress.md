@@ -1,6 +1,6 @@
 # Progress Tracker
 
-> Last touched: 2026-03-03 by Claude (Executor, #115)
+> Last touched: 2026-03-03 by Claude (Executor, #123)
 
 ## Current State
 
@@ -73,6 +73,7 @@
 | #119 Implement SolutionFallbackService | M4 | Executor | Done | `src/Typewriter.Loading.MSBuild/SolutionFallbackService.cs`; implements ISolutionFallbackService; spawns `dotnet sln <path> list`, parses stdout, resolves relative→absolute paths; TW2310 on non-zero exit; build 0 errors/warnings |
 | #120 Create solution-slnx test fixture | M4 | Executor | Done | `tests/fixtures/solution-slnx/SolutionSlnx.slnx` + independent ProjectA + ProjectB copies (Option B); valid XML; targets net10.0 |
 | #122 Compose SolutionFallbackService in Program.cs | M4 | Executor | Done | `ProjectGraphService` constructor updated to accept `ISolutionFallbackService`; `Program.cs` instantiates `SolutionFallbackService` and passes it in; `CsprojIntegrationTests` updated to match new ctor signature |
+| #123 Add SolutionLoaderTests integration tests | M4 | Executor | Done | `SolutionLoader.cs` + `SolutionLoaderTests.cs`; 4 tests: Sln_LoadsExpectedProjects, Slnx_LoadsExpectedProjects, SlnAndSlnx_ProduceSameTraversalPlan, Slnx_WhenGraphFails_UsesFallback; TW2110/TW2310 exercised |
 
 ## Decisions
 
