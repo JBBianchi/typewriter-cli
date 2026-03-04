@@ -94,6 +94,7 @@
 | #140 Port ItemFilter.cs | M6 | Executor | Done | Direct lift from upstream — zero VS coupling; `namespace Typewriter.Generation`; Placeholder.cs removed; build 0 errors/warnings, 157/157 tests pass |
 | #141 Implement TemplateAssemblyLoadContext | M6 | Executor | Done | `TemplateAssemblyLoadContext.cs` — collectible `AssemblyLoadContext` subclass; probes assemblyDir → AppContext.BaseDirectory → null fallback; TW3002 added for assembly load failures |
 | #142 Adapt TemplateCodeParser.cs | M6 | Executor | Done | `TemplateCodeParser.cs` adapted: `ProjectItem`→`string templateFilePath`, `PathResolver.ResolveRelative`→inline `ResolveReferencePath`, `Log.Error` removed; `#reference` parsing intact; stubs for `ShadowClass`, `Compiler`, `Contexts`; `Stream`+`Snippet` ported as-is to `Lexing/`; build 0 errors/0 warnings, 157/157 tests pass |
+| #144 Adapt Compiler.cs with TemplateAssemblyLoadContext | M6 | Executor | Done | `Compiler.cs` adapted: `Assembly.LoadFrom`→`TemplateAssemblyLoadContext`, `ProjectItem`→`string templateFilePath`, `ErrorList`/`Log` (VS) removed; `ShadowClass` upgraded from stub: `Clear`/`Parse`/`AddBlock`/`AddLambda`/`AddReference` now assemble source code, `Compile()` uses `CSharpCompilation` directly; build 0 errors/0 warnings, 157/157 tests pass |
 
 ## Decisions
 
