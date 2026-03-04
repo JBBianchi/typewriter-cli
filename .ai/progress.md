@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-04 by Claude (Executor, #163)
+> Last touched: 2026-03-04 by Claude (Executor, #164)
 
 ## Current State
 
-- **Active milestone**: M7 - Golden parity and fixture repos
+- **Active milestone**: M8 - CI pipelines and release readiness
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: Complete remaining M7 acceptance criteria verification
+- **Next step**: Continue M8 tasks (CI pipelines, release readiness)
 
 ## Milestone Map
 
@@ -20,7 +20,7 @@
 | M4 | MSBuild loading: `.sln` and `.slnx` | Done | All acceptance criteria verified: restore/build 0 errors, 150/150 tests pass, all 4 SolutionLoaderTests green, TW2110/TW2310 covered, InputResolver accepts .sln/.slnx, origin/ unchanged, zero VS refs |
 | M5 | Semantic model extraction parity | Done | All acceptance criteria verified (#137): restore/build 0 errors/0 warnings, 155/155 tests pass (142 unit + 13 integration), all 6 MetadataParityTests green (incl. SourceGeneratorTypes_AreVisible), RoslynFileMetadata.cs zero VS refs, source-gen fixture green, origin/ unchanged, zero EnvDTE/VS refs |
 | M6 | Template execution and output management | Done | All acceptance criteria verified (#151): restore/build 0 errors/0 warnings, 170/170 tests pass (157 unit + 13 integration), TemplateEngineTests 3/3, OutputPolicyTests 3/3, AssemblyLoadContextTests 7/7, Placeholder.cs deleted, zero VS coupling in Generation/ source, origin/ unchanged |
-| M7 | Golden parity and fixture repos | In progress | Simple (#154), multi-project (#155), multi-target (#156), source-generators (#157), complex-types (#158) fixtures created; ParityMatrix.md (#159) done; baselines captured (#160); golden test runner implemented (#161) |
+| M7 | Golden parity and fixture repos | Done | All acceptance criteria verified (#164): 5 fixtures created (simple, multi-project, multi-target, source-generators, complex-types); ParityMatrix.md with 8 identical + 4 transformed features; baselines captured (12 .ts files); golden test runner (5 tests); EOL normalization (#162); baseline update docs (#163); all 179/179 tests pass (159 unit + 13 integration + 6 golden + 1 perf); CI matrix covers Windows/Ubuntu/macOS; origin/ unchanged |
 | M8 | CI pipelines and release readiness | In progress | eng/versioning.props created (#166) |
 | M9 | Performance and caching hardening | Not started | |
 
@@ -112,6 +112,7 @@
 | #160 Run generation against fixtures and capture baselines (M7) | M7 | Executor | Done | Ran `typewriter-cli generate` against all 5 fixtures (simple, multi-project, multi-target, source-generators, complex-types); captured 12 baseline .ts files in `tests/baselines/`; LF line endings enforced via `.gitattributes`; fixed SourceGenTypes.tst predicate filter syntax (`$IsSourceGenLib`); fixed TemplateAssemblyLoadContext to defer to default context for shared assemblies; fixed ShadowClass compilation to include System.Runtime/Collections/netstandard refs; fixed Parser extension method lookup via GetMethods+IsAssignableFrom; fixed ProjectGraphService JIT-safety via NoInlining wrapper; 174/174 tests pass |
 | #161 Implement golden test runner (M7) | M7 | Executor | Done | `GoldenTestBase` infrastructure class with `CapturingOutputWriter` and `TestDiagnosticReporter`; 5 per-fixture test classes (GoldenTest_Simple, GoldenTest_MultiProject, GoldenTest_MultiTarget, GoldenTest_SourceGenerators, GoldenTest_ComplexTypes); all 5 golden tests pass against committed baselines; xunit.runner.json disables parallel test collections; 179/179 tests pass |
 | #163 Document baseline update workflow (M7) | M7 | Executor | Done | `tests/Typewriter.GoldenTests/README.md` — documents running golden tests, updating baselines (`Verify.UpdateSnapshots=1` + manual process), when to update, CI baseline diff review, and how golden tests work internally |
+| #164 Run M7 acceptance criteria (M7) | M7 | Executor | Done | All 179/179 tests pass (159 unit + 13 integration + 6 golden + 1 perf); all 8 `identical` ParityMatrix features have passing golden tests; CI matrix covers Windows/Ubuntu/macOS; origin/ unchanged; M7→Done, active milestone→M8 |
 
 ## Decisions
 
