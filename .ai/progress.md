@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-04 by Claude (Executor, #150)
+> Last touched: 2026-03-04 by Claude (Executor, #151)
 
 ## Current State
 
-- **Active milestone**: M6 - Template execution and output management
-- **Status**: In progress
+- **Active milestone**: M7 - Golden parity and fixture repos
+- **Status**: Not started
 - **Blocker**: None
-- **Next step**: Complete remaining M6 tasks (golden parity, integration tests)
+- **Next step**: Begin M7 tasks (golden parity snapshots, fixture repos)
 
 ## Milestone Map
 
@@ -19,7 +19,7 @@
 | M3 | MSBuild loading: `.csproj` and restore pipeline | Done | All acceptance criteria verified: restore/build 0 errors, 133/133 tests pass, origin/ unchanged, zero VS coupling |
 | M4 | MSBuild loading: `.sln` and `.slnx` | Done | All acceptance criteria verified: restore/build 0 errors, 150/150 tests pass, all 4 SolutionLoaderTests green, TW2110/TW2310 covered, InputResolver accepts .sln/.slnx, origin/ unchanged, zero VS refs |
 | M5 | Semantic model extraction parity | Done | All acceptance criteria verified (#137): restore/build 0 errors/0 warnings, 155/155 tests pass (142 unit + 13 integration), all 6 MetadataParityTests green (incl. SourceGeneratorTypes_AreVisible), RoslynFileMetadata.cs zero VS refs, source-gen fixture green, origin/ unchanged, zero EnvDTE/VS refs |
-| M6 | Template execution and output management | In progress | Output path policy + writer done (#139) |
+| M6 | Template execution and output management | Done | All acceptance criteria verified (#151): restore/build 0 errors/0 warnings, 170/170 tests pass (157 unit + 13 integration), TemplateEngineTests 3/3, OutputPolicyTests 3/3, AssemblyLoadContextTests 7/7, Placeholder.cs deleted, zero VS coupling in Generation/ source, origin/ unchanged |
 | M7 | Golden parity and fixture repos | Not started | |
 | M8 | CI pipelines and release readiness | In progress | eng/versioning.props created (#166) |
 | M9 | Performance and caching hardening | Not started | |
@@ -101,6 +101,7 @@
 | #146 Delete Placeholder.cs from Typewriter.Generation | M6 | Executor | Done | Already removed in #140 (commit 191b407); verified no references remain; build 0 errors/0 warnings, 167/167 tests pass |
 | #148 Add OutputPolicyTests unit tests | M6 | Executor | Done | OutputPolicyTests verified collision suffixes, .d.ts handling, directory preservation; build 0 errors/0 warnings |
 | #150 Wire template execution into ApplicationRunner | M6 | Executor | Done | `ApplicationRunner` gains `IOutputWriter` + `IOutputPathPolicy` deps; template execution loop after workspace load: validates .tst files, creates `RoslynMetadataProvider`, iterates `IFileMetadata`, handles single-file vs per-file mode, TW3001/TW3002 errors; all callers updated; build 0 errors/0 warnings, 169/169 tests pass |
+| #151 Run M6 acceptance criteria verification | M6 | Executor | Done | restore/build/test all pass; 170/170 tests (157 unit + 13 integration); TemplateEngineTests 3/3, OutputPolicyTests 3/3, AssemblyLoadContextTests 7/7; Placeholder.cs deleted; zero VS coupling in Generation/ source; origin/ unchanged; M6→Done, active milestone→M7 |
 
 ## Decisions
 
