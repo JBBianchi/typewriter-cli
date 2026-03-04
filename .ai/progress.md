@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-04 by Claude (Executor, #156)
+> Last touched: 2026-03-04 by Claude (Executor, #157)
 
 ## Current State
 
 - **Active milestone**: M7 - Golden parity and fixture repos
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: Create remaining M7 fixture sets (multi-target, source-generators, complex-types)
+- **Next step**: Create remaining M7 fixture sets (complex-types)
 
 ## Milestone Map
 
@@ -106,6 +106,7 @@
 | #154 Create simple fixture for golden tests (M7) | M7 | Executor | Done | `tests/fixtures/simple/SimpleProject/` — net10.0 project with UserModel (class+base+interface), UserRole (enum), INamedEntity (interface); 2 .tst templates (Interfaces.tst, Enums.tst); ShadowClass fix: added Typewriter.Metadata assembly ref for Typewriter.Configuration namespace; 2 new parseability tests; build 0 errors/0 warnings, 174/174 tests pass |
 | #155 Create multi-project fixture (M7) | M7 | Executor | Done | `tests/fixtures/multi-project/` — MultiProject.sln with DomainLib (IEntity, EntityBase, Address) and ApiLib (UserEntity, OrderEntity → EntityBase); CrossProjectTypes.tst traverses cross-project references; dotnet restore/build verified |
 | #156 Create multi-target fixture (M7) | M7 | Executor | Done | `tests/fixtures/multi-target/MultiTargetLib/` — `<TargetFrameworks>net10.0;net8.0</TargetFrameworks>`, `PlatformInfo.cs` with `#if NET8_0` conditional compilation, `PlatformInfo.tst` template; restore/build verified for both TFMs |
+| #157 Create source-generators fixture (M7) | M7 | Executor | Done | `tests/fixtures/source-generators/` — SourceGenLib (net10.0, handwritten Class1 + generator-produced GeneratedHelper) + SourceGenerator (netstandard2.0, HelloWorldGenerator IIncrementalGenerator); SourceGenTypes.tst iterates $Classes with namespace filter; PARITY-GAP documented for source-generator visibility (new capability, no upstream equivalent); dotnet restore/build verified |
 
 ## Decisions
 
