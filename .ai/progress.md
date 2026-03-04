@@ -7,7 +7,7 @@
 - **Active milestone**: M7 - Golden parity and fixture repos
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: Create remaining M7 fixture sets (simple, multi-target, complex-types)
+- **Next step**: Create remaining M7 fixture sets (complex-types)
 
 ## Milestone Map
 
@@ -20,7 +20,7 @@
 | M4 | MSBuild loading: `.sln` and `.slnx` | Done | All acceptance criteria verified: restore/build 0 errors, 150/150 tests pass, all 4 SolutionLoaderTests green, TW2110/TW2310 covered, InputResolver accepts .sln/.slnx, origin/ unchanged, zero VS refs |
 | M5 | Semantic model extraction parity | Done | All acceptance criteria verified (#137): restore/build 0 errors/0 warnings, 155/155 tests pass (142 unit + 13 integration), all 6 MetadataParityTests green (incl. SourceGeneratorTypes_AreVisible), RoslynFileMetadata.cs zero VS refs, source-gen fixture green, origin/ unchanged, zero EnvDTE/VS refs |
 | M6 | Template execution and output management | Done | All acceptance criteria verified (#151): restore/build 0 errors/0 warnings, 170/170 tests pass (157 unit + 13 integration), TemplateEngineTests 3/3, OutputPolicyTests 3/3, AssemblyLoadContextTests 7/7, Placeholder.cs deleted, zero VS coupling in Generation/ source, origin/ unchanged |
-| M7 | Golden parity and fixture repos | Not started | |
+| M7 | Golden parity and fixture repos | In progress | Simple fixture created (#154) |
 | M8 | CI pipelines and release readiness | In progress | eng/versioning.props created (#166) |
 | M9 | Performance and caching hardening | Not started | |
 
@@ -103,7 +103,9 @@
 | #150 Wire template execution into ApplicationRunner | M6 | Executor | Done | `ApplicationRunner` gains `IOutputWriter` + `IOutputPathPolicy` deps; template execution loop after workspace load: validates .tst files, creates `RoslynMetadataProvider`, iterates `IFileMetadata`, handles single-file vs per-file mode, TW3001/TW3002 errors; all callers updated; build 0 errors/0 warnings, 169/169 tests pass |
 | #151 Run M6 acceptance criteria verification | M6 | Executor | Done | restore/build/test all pass; 170/170 tests (157 unit + 13 integration); TemplateEngineTests 3/3, OutputPolicyTests 3/3, AssemblyLoadContextTests 7/7; Placeholder.cs deleted; zero VS coupling in Generation/ source; origin/ unchanged; M6→Done, active milestone→M7 |
 | #152 Review origin/ for fixture templates (M7) | M7 | Executor | Done | [T152-m7-fixture-review.md](.ai/tasks/T152-m7-fixture-review.md) — catalogued 6 templates, 3 golden files, 14+ input types; mapped to 5 M7 fixture sets (simple, multi-project, multi-target, source-generators, complex-types); documented parity tags (identical/transformed/deferred) |
+| #154 Create simple fixture for golden tests (M7) | M7 | Executor | Done | `tests/fixtures/simple/SimpleProject/` — net10.0 project with UserModel (class+base+interface), UserRole (enum), INamedEntity (interface); 2 .tst templates (Interfaces.tst, Enums.tst); ShadowClass fix: added Typewriter.Metadata assembly ref for Typewriter.Configuration namespace; 2 new parseability tests; build 0 errors/0 warnings, 174/174 tests pass |
 | #155 Create multi-project fixture (M7) | M7 | Executor | Done | `tests/fixtures/multi-project/` — MultiProject.sln with DomainLib (IEntity, EntityBase, Address) and ApiLib (UserEntity, OrderEntity → EntityBase); CrossProjectTypes.tst traverses cross-project references; dotnet restore/build verified |
+| #156 Create multi-target fixture (M7) | M7 | Executor | Done | `tests/fixtures/multi-target/MultiTargetLib/` — `<TargetFrameworks>net10.0;net8.0</TargetFrameworks>`, `PlatformInfo.cs` with `#if NET8_0` conditional compilation, `PlatformInfo.tst` template; restore/build verified for both TFMs |
 | #157 Create source-generators fixture (M7) | M7 | Executor | Done | `tests/fixtures/source-generators/` — SourceGenLib (net10.0, handwritten Class1 + generator-produced GeneratedHelper) + SourceGenerator (netstandard2.0, HelloWorldGenerator IIncrementalGenerator); SourceGenTypes.tst iterates $Classes with namespace filter; PARITY-GAP documented for source-generator visibility (new capability, no upstream equivalent); dotnet restore/build verified |
 
 ## Decisions
