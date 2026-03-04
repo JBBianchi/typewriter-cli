@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-03 by Claude (Executor, #132)
+> Last touched: 2026-03-04 by Claude (Executor, #131)
 
 ## Current State
 
 - **Active milestone**: M5 - Semantic model extraction parity
 - **Status**: In progress
 - **Blocker**: None
-- **Next step**: Implement metadata extraction (M6 — template execution and output management)
+- **Next step**: Complete remaining M5 tasks; then M6 — template execution and output management
 
 ## Milestone Map
 
@@ -84,6 +84,7 @@
 | #130 Implement RoslynWorkspaceService | M5 | Executor | Done | `src/Typewriter.Loading.MSBuild/RoslynWorkspaceService.cs`; MSBuildWorkspace.Create from GlobalProperties; OpenProjectAsync per LoadTarget; workspace diagnostics → TW2200/TW2201; null/error compilation → TW2202; returns WorkspaceLoadResult; build 0 errors/warnings |
 | #132 Wire IRoslynWorkspaceService into ApplicationRunner | M5 | Executor | Done | `ApplicationRunner` constructor gains `IRoslynWorkspaceService`; `LoadAsync` called after `BuildPlanAsync`; null return → TW2200 + exit 3; `WorkspaceLoadResult` stored for M6; `Program.cs` composes `RoslynWorkspaceService`; unit tests updated; build 0 errors, 151/151 tests pass |
 | #133 Compose RoslynWorkspaceService in Program.cs | M5 | Executor | Done | `Program.cs` instantiates `RoslynWorkspaceService`; passed to `ApplicationRunner` ctor; `ApplicationRunner` calls `LoadAsync` after `BuildPlanAsync` (step 6); all tests updated; 151/151 pass |
+| #131 Rewrite RoslynMetadataProvider to use WorkspaceLoadResult | M5 | Executor | Done | `RoslynMetadataProvider` consumes `IReadOnlyList<(Project, Compilation)>` from WorkspaceLoadResult; `RoslynFileMetadata` rewritten as full `IFileMetadata` impl with Roslyn semantic model extraction; zero VS/DTE refs; build 0 errors, 151/151 tests pass |
 
 ## Decisions
 
