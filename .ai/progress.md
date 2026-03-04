@@ -1,6 +1,6 @@
 # Progress Tracker
 
-> Last touched: 2026-03-04 by Claude (Executor, #161)
+> Last touched: 2026-03-04 by Claude (Executor, #163)
 
 ## Current State
 
@@ -111,6 +111,7 @@
 | #159 Create ParityMatrix.md (M7) | M7 | Executor | Done | `tests/Typewriter.GoldenTests/ParityMatrix.md` — 12 parity features tagged: 6 identical (class, enum, interface gen; nullable/generic types; partial classes; BOM policy; collision naming), 4 transformed (multi-project refs, TFM selection, source-gen symbols, requestRender batch), 0 deferred; all identical features reference golden test fixtures |
 | #160 Run generation against fixtures and capture baselines (M7) | M7 | Executor | Done | Ran `typewriter-cli generate` against all 5 fixtures (simple, multi-project, multi-target, source-generators, complex-types); captured 12 baseline .ts files in `tests/baselines/`; LF line endings enforced via `.gitattributes`; fixed SourceGenTypes.tst predicate filter syntax (`$IsSourceGenLib`); fixed TemplateAssemblyLoadContext to defer to default context for shared assemblies; fixed ShadowClass compilation to include System.Runtime/Collections/netstandard refs; fixed Parser extension method lookup via GetMethods+IsAssignableFrom; fixed ProjectGraphService JIT-safety via NoInlining wrapper; 174/174 tests pass |
 | #161 Implement golden test runner (M7) | M7 | Executor | Done | `GoldenTestBase` infrastructure class with `CapturingOutputWriter` and `TestDiagnosticReporter`; 5 per-fixture test classes (GoldenTest_Simple, GoldenTest_MultiProject, GoldenTest_MultiTarget, GoldenTest_SourceGenerators, GoldenTest_ComplexTypes); all 5 golden tests pass against committed baselines; xunit.runner.json disables parallel test collections; 179/179 tests pass |
+| #163 Document baseline update workflow (M7) | M7 | Executor | Done | `tests/Typewriter.GoldenTests/README.md` — documents running golden tests, updating baselines (`Verify.UpdateSnapshots=1` + manual process), when to update, CI baseline diff review, and how golden tests work internally |
 
 ## Decisions
 
