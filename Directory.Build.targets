@@ -1,0 +1,10 @@
+<Project>
+
+  <!-- MinVer auto-selects net10.0 with MSBuild >= 18.0, but the net10.0 binary
+       requires the GA runtime. Force net8.0 which rolls forward via
+       runtimeconfig rollForward:major to the installed pre-release runtime. -->
+  <PropertyGroup Condition="'$(MinVerTargetFramework)' == 'net10.0'">
+    <MinVerTargetFramework>net8.0</MinVerTargetFramework>
+  </PropertyGroup>
+
+</Project>
