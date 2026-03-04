@@ -3,6 +3,7 @@
   <ItemGroup>
     <PackageReference Include="xunit" Version="2.*" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
+    <PackageReference Include="Verify.Xunit" Version="28.*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
     <!-- Suppress MSBL001: Microsoft.Build.* packages flow transitively via Typewriter.Loading.MSBuild; runtime managed by MsBuildLocatorService -->
     <PackageReference Include="Microsoft.Build" Version="17.*" ExcludeAssets="runtime" />
