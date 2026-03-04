@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-04 by Claude (Executor, #171)
+> Last touched: 2026-03-04 by Claude (Executor, #173)
 
 ## Current State
 
-- **Active milestone**: M8 - CI pipelines and release readiness
-- **Status**: In progress
+- **Active milestone**: M9 - Performance and caching hardening
+- **Status**: Not started
 - **Blocker**: None
-- **Next step**: Continue M8 tasks (remaining CI/release items)
+- **Next step**: Begin M9 tasks (performance profiling and caching)
 
 ## Milestone Map
 
@@ -21,7 +21,7 @@
 | M5 | Semantic model extraction parity | Done | All acceptance criteria verified (#137): restore/build 0 errors/0 warnings, 155/155 tests pass (142 unit + 13 integration), all 6 MetadataParityTests green (incl. SourceGeneratorTypes_AreVisible), RoslynFileMetadata.cs zero VS refs, source-gen fixture green, origin/ unchanged, zero EnvDTE/VS refs |
 | M6 | Template execution and output management | Done | All acceptance criteria verified (#151): restore/build 0 errors/0 warnings, 170/170 tests pass (157 unit + 13 integration), TemplateEngineTests 3/3, OutputPolicyTests 3/3, AssemblyLoadContextTests 7/7, Placeholder.cs deleted, zero VS coupling in Generation/ source, origin/ unchanged |
 | M7 | Golden parity and fixture repos | Done | All acceptance criteria verified (#164): 5 fixtures created (simple, multi-project, multi-target, source-generators, complex-types); ParityMatrix.md with 8 identical + 4 transformed features; baselines captured (12 .ts files); golden test runner (5 tests); EOL normalization (#162); baseline update docs (#163); all 179/179 tests pass (159 unit + 13 integration + 6 golden + 1 perf); CI matrix covers Windows/Ubuntu/macOS; origin/ unchanged |
-| M8 | CI pipelines and release readiness | In progress | eng/versioning.props created (#166) |
+| M8 | CI pipelines and release readiness | Done | All M8 acceptance criteria verified (#173): CI matrix green on all 3 OSes (restore/build/test/pack); smoke test on all 3 OSes; parity-gate before publish; release.yml tag-triggered auto-publish; NUGET_API_KEY secret-only; release dry-run verified (#172); 179/179 tests pass |
 | M9 | Performance and caching hardening | Not started | |
 
 ## Active Tasks
@@ -115,6 +115,7 @@
 | #164 Run M7 acceptance criteria (M7) | M7 | Executor | Done | All 179/179 tests pass (159 unit + 13 integration + 6 golden + 1 perf); all 8 `identical` ParityMatrix features have passing golden tests; CI matrix covers Windows/Ubuntu/macOS; origin/ unchanged; M7→Done, active milestone→M8 |
 | #171 Create release.yml tag-triggered workflow (M8) | M8 | Executor | Done | `.github/workflows/release.yml` — tag-triggered (`v*.*.*`) release workflow with `build-test` (3-OS matrix), `parity-gate` (golden tests), `publish` (NuGet via `NUGET_API_KEY` secret); artifact upload/download for nupkg |
 | #172 Verify release dry-run locally (M8) | M8 | Executor | Done | [T172-verify-release-dryrun.md](.ai/tasks/T172-verify-release-dryrun.md) — `dotnet pack` → local tool install → `typewriter-cli generate` smoke test all pass; reusable script `eng/verify-release-dryrun.sh` created; 179/179 tests pass |
+| #173 Run M8 acceptance criteria - CI matrix (M8) | M8 | Executor | Done | All M8 gates verified: CI matrix (3 OSes), smoke test, parity-gate→publish ordering, NUGET_API_KEY secret-only, release dry-run; 179/179 tests; `dotnet pack` produces versioned .nupkg; M8→Done, active→M9 |
 
 ## Decisions
 
