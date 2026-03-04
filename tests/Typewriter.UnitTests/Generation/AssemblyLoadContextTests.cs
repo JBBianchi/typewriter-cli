@@ -25,12 +25,24 @@ public class AssemblyLoadContextTests : IDisposable
 
     /// <summary>
     /// Cleans up the temporary directory created for test isolation.
+    /// On Windows, loaded assemblies may keep file locks briefly after
+    /// <see cref="AssemblyLoadContext.Unload"/>, so deletion is best-effort.
     /// </summary>
     public void Dispose()
     {
-        if (Directory.Exists(_tempDir))
+        if (!Directory.Exists(_tempDir))
+        {
+            return;
+        }
+
+        try
         {
             Directory.Delete(_tempDir, recursive: true);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // On Windows the assembly file lock may outlive Unload + GC;
+            // the OS temp directory will clean it up eventually.
         }
     }
 
@@ -71,7 +83,7 @@ public class AssemblyLoadContextTests : IDisposable
         Assert.NotNull(loaded);
         Assert.Equal(sourceAssembly.GetName().Name, loaded.GetName().Name);
 
-        context.Unload();
+        UnloadAndRelease(context);
     }
 
     /// <summary>
@@ -154,7 +166,7 @@ public class AssemblyLoadContextTests : IDisposable
         Assert.NotNull(loaded);
         Assert.Equal(sourceAssembly.GetName().Name, loaded.GetName().Name);
 
-        context.Unload();
+        UnloadAndRelease(context);
     }
 
     /// <summary>
@@ -201,5 +213,16 @@ public class AssemblyLoadContextTests : IDisposable
         Assert.Null(result);
 
         context.Unload();
+    }
+
+    /// <summary>
+    /// Unloads the context and triggers garbage collection so that
+    /// Windows releases file locks on assemblies loaded from <see cref="_tempDir"/>.
+    /// </summary>
+    private static void UnloadAndRelease(TemplateAssemblyLoadContext context)
+    {
+        context.Unload();
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
     }
 }
