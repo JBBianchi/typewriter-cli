@@ -12,4 +12,5 @@ public class TypewriterConfig
     public string? Output { get; set; }
     public string? Verbosity { get; set; }
     public bool? FailOnWarnings { get; set; }
+    public bool? DryRun { get; set; }
 }

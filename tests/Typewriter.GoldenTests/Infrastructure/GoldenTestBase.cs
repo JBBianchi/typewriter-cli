@@ -104,7 +104,8 @@ public abstract class GoldenTestBase : IAsyncLifetime
             Restore: restore,
             Output: null,
             Verbosity: "normal",
-            FailOnWarnings: false);
+            FailOnWarnings: false,
+            DryRun: false);
 
         var exitCode = await runner.RunAsync(options, reporter);
 

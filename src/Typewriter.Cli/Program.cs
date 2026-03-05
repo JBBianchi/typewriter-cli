@@ -53,7 +53,8 @@ generateCommand.SetHandler(async (InvocationContext ctx) =>
         restore:       pr.GetValueForOption(restoreOpt),
         output:        pr.GetValueForOption(outputOpt),
         verbosity:     pr.GetValueForOption(verbosityOpt),
-        failOnWarnings: pr.GetValueForOption(failOnWarningsOpt));
+        failOnWarnings: pr.GetValueForOption(failOnWarningsOpt),
+        dryRun:        false);
 
     var reporter = new MsBuildDiagnosticReporter();
 
