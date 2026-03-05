@@ -124,7 +124,8 @@ public class LargeSolutionTests : IAsyncLifetime
             Restore: true,
             Output: null,
             Verbosity: "normal",
-            FailOnWarnings: false);
+            FailOnWarnings: false,
+            DryRun: false);
 
         return await runner.RunAsync(options, reporter);
     }

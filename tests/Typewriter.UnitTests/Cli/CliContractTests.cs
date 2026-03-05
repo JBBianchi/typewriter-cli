@@ -154,7 +154,8 @@ public class CliContractTests : IDisposable
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         var exitCode = await runner.RunAsync(options, reporter);
 
@@ -180,7 +181,8 @@ public class CliContractTests : IDisposable
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: true);
+            failOnWarnings: true,
+            dryRun:        false);
 
         var exitCode = await runner.RunAsync(options, reporter);
 
@@ -206,7 +208,8 @@ public class CliContractTests : IDisposable
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         var exitCode = await runner.RunAsync(options, reporter);
 
@@ -233,7 +236,8 @@ public class CliContractTests : IDisposable
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         var exitCode = await runner.RunAsync(options, reporter);
 

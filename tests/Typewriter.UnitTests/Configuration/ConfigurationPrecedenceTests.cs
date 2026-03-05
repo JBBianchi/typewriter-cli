@@ -25,7 +25,8 @@ public class ConfigurationPrecedenceTests
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         Assert.Equal("net10.0", result.Framework);
     }
@@ -46,7 +47,8 @@ public class ConfigurationPrecedenceTests
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         Assert.Equal("net8.0", result.Framework);
     }
@@ -65,7 +67,8 @@ public class ConfigurationPrecedenceTests
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         Assert.Equal("normal", result.Verbosity);
     }
@@ -86,7 +89,8 @@ public class ConfigurationPrecedenceTests
             restore:       false,
             output:        null,
             verbosity:     "detailed",
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         Assert.Equal("detailed", result.Verbosity);
     }
@@ -107,7 +111,8 @@ public class ConfigurationPrecedenceTests
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         Assert.Equal("minimal", result.Verbosity);
     }
@@ -128,7 +133,8 @@ public class ConfigurationPrecedenceTests
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
         Assert.True(result.FailOnWarnings);
     }
@@ -149,9 +155,74 @@ public class ConfigurationPrecedenceTests
             restore:       false,
             output:        null,
             verbosity:     null,
-            failOnWarnings: true);
+            failOnWarnings: true,
+            dryRun:        false);
 
         Assert.True(result.FailOnWarnings);
+    }
+
+    [Fact]
+    public void DryRun_ConfigTrueIsPreservedWhenCliFalse()
+    {
+        var config = new TypewriterConfig { DryRun = true };
+
+        var result = GenerateCommandOptions.Merge(
+            config:        config,
+            templates:     ["tmpl.tst"],
+            solution:      null,
+            project:       null,
+            framework:     null,
+            configuration: null,
+            runtime:       null,
+            restore:       false,
+            output:        null,
+            verbosity:     null,
+            failOnWarnings: false,
+            dryRun:        false);
+
+        Assert.True(result.DryRun);
+    }
+
+    [Fact]
+    public void DryRun_CliTrueOverridesConfigFalse()
+    {
+        var config = new TypewriterConfig { DryRun = false };
+
+        var result = GenerateCommandOptions.Merge(
+            config:        config,
+            templates:     ["tmpl.tst"],
+            solution:      null,
+            project:       null,
+            framework:     null,
+            configuration: null,
+            runtime:       null,
+            restore:       false,
+            output:        null,
+            verbosity:     null,
+            failOnWarnings: false,
+            dryRun:        true);
+
+        Assert.True(result.DryRun);
+    }
+
+    [Fact]
+    public void DryRun_DefaultsToFalseWhenNeitherSet()
+    {
+        var result = GenerateCommandOptions.Merge(
+            config:        null,
+            templates:     ["tmpl.tst"],
+            solution:      null,
+            project:       null,
+            framework:     null,
+            configuration: null,
+            runtime:       null,
+            restore:       false,
+            output:        null,
+            verbosity:     null,
+            failOnWarnings: false,
+            dryRun:        false);
+
+        Assert.False(result.DryRun);
     }
 
     [Fact]
@@ -168,7 +239,8 @@ public class ConfigurationPrecedenceTests
             restore:       true,
             output:        "./out",
             verbosity:     "quiet",
-            failOnWarnings: true);
+            failOnWarnings: true,
+            dryRun:        false);
 
         Assert.Equal(new[] { "a.tst", "b.tst" }, result.Templates);
         Assert.Equal("my.sln",    result.Solution);

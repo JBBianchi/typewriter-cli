@@ -17,7 +17,8 @@ public record GenerateCommandOptions(
     bool Restore,
     string? Output,
     string Verbosity,
-    bool FailOnWarnings)
+    bool FailOnWarnings,
+    bool DryRun)
 {
     /// <summary>
     /// Merges CLI arguments, an optional config file, and defaults into a
@@ -35,7 +36,8 @@ public record GenerateCommandOptions(
         bool restore,
         string? output,
         string? verbosity,
-        bool failOnWarnings)
+        bool failOnWarnings,
+        bool dryRun)
     {
         return new GenerateCommandOptions(
             Templates:      templates,
@@ -47,6 +49,7 @@ public record GenerateCommandOptions(
             Restore:        restore,
             Output:         output         ?? config?.Output,
             Verbosity:      verbosity      ?? config?.Verbosity ?? "normal",
-            FailOnWarnings: failOnWarnings || (config?.FailOnWarnings ?? false));
+            FailOnWarnings: failOnWarnings || (config?.FailOnWarnings ?? false),
+            DryRun:         dryRun         || (config?.DryRun ?? false));
     }
 }

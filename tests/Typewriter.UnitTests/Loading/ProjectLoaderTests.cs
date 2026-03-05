@@ -47,7 +47,8 @@ public class ProjectLoaderTests : IDisposable
             restore: restore,
             output: null,
             verbosity: null,
-            failOnWarnings: false);
+            failOnWarnings: false,
+            dryRun:        false);
 
     [Fact]
     public async Task Csproj_LoadsWithoutRestore_WhenAssetsExist()
