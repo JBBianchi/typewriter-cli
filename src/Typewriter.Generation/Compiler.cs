@@ -23,6 +23,7 @@ public sealed class Compiler
     private static readonly string TempDirectory = Path.Combine(Path.GetTempPath(), "Typewriter");
 
     private readonly InvocationCache _cache;
+    private readonly string _subDirectory;
 
     /// <summary>
     /// Initializes a new <see cref="Compiler"/> with the specified invocation cache.
@@ -34,6 +35,7 @@ public sealed class Compiler
     public Compiler(InvocationCache cache)
     {
         _cache = cache;
+        _subDirectory = Path.Combine(TempDirectory, Guid.NewGuid().ToString("N"));
     }
 
     /// <summary>
@@ -50,12 +52,9 @@ public sealed class Compiler
     {
         var assembly = _cache.GetOrAddTemplate(templateFilePath, _ =>
         {
-            if (!Directory.Exists(TempDirectory))
-            {
-                Directory.CreateDirectory(TempDirectory);
-            }
+            Directory.CreateDirectory(_subDirectory);
 
-            // Copy referenced assemblies to the temp directory so the isolated load context
+            // Copy referenced assemblies to the subdirectory so the isolated load context
             // can resolve them at runtime.
             foreach (var refAsm in shadowClass.ReferencedAssemblies)
             {
@@ -65,7 +64,7 @@ public sealed class Compiler
                     continue;
                 }
 
-                var asmDestPath = Path.Combine(TempDirectory, Path.GetFileName(asmSourcePath));
+                var asmDestPath = Path.Combine(_subDirectory, Path.GetFileName(asmSourcePath));
 
                 var sourceAssemblyName = AssemblyName.GetAssemblyName(asmSourcePath);
 
@@ -92,7 +91,7 @@ public sealed class Compiler
             }
 
             var fileName = Path.GetRandomFileName();
-            var path = Path.Combine(TempDirectory, fileName);
+            var path = Path.Combine(_subDirectory, fileName);
 
             var result = shadowClass.Compile(path);
 
