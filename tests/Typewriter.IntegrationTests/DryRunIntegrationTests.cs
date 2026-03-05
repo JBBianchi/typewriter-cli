@@ -11,6 +11,7 @@ namespace Typewriter.IntegrationTests;
 /// Integration tests that exercise the full <c>--dry-run</c> pipeline against a fixture project.
 /// Verifies that the generate pipeline runs end-to-end without writing output files.
 /// </summary>
+[Collection("ApplicationRunner")]
 public class DryRunIntegrationTests
 {
     private sealed class CapturingReporter : IDiagnosticReporter
