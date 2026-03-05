@@ -83,6 +83,12 @@ var parser = new CommandLineBuilder(rootCommand)
     .UseDefaults()
     .Build();
 
+if (args.Length == 0)
+{
+    await parser.InvokeAsync(["--help"]);
+    return 0;
+}
+
 // Map parse errors to exit code 2 before System.CommandLine's default (exit 1).
 var parseResult = parser.Parse(args);
 if (parseResult.Errors.Count > 0)
