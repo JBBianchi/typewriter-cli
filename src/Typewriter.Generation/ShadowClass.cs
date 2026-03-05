@@ -268,9 +268,11 @@ public class ShadowClass
 
     private static void AddCoreReferenceIfMissing(List<MetadataReference> references, System.Type type)
     {
-        var location = type.Assembly.Location;
-        if (string.IsNullOrEmpty(location))
+        var location = ResolveAssemblyPath(type.Assembly);
+        if (location == null)
         {
+            // Resolver exhausted all fallbacks; try TPA lookup by filename as last resort.
+            AddTrustedPlatformAssembly(references, type.Assembly.GetName().Name + ".dll");
             return;
         }
 
