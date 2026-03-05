@@ -35,7 +35,7 @@ public sealed class Compiler : IDisposable
     public Compiler(InvocationCache cache)
     {
         _cache = cache;
-        _subDirectory = Path.Combine(TempDirectory, Path.GetRandomFileName());
+        _subDirectory = Path.Combine(TempDirectory, Guid.NewGuid().ToString("N"));
     }
 
     /// <summary>
@@ -52,12 +52,9 @@ public sealed class Compiler : IDisposable
     {
         var assembly = _cache.GetOrAddTemplate(templateFilePath, _ =>
         {
-            if (!Directory.Exists(_subDirectory))
-            {
-                Directory.CreateDirectory(_subDirectory);
-            }
+            Directory.CreateDirectory(_subDirectory);
 
-            // Copy referenced assemblies to the temp directory so the isolated load context
+            // Copy referenced assemblies to the subdirectory so the isolated load context
             // can resolve them at runtime.
             foreach (var refAsm in shadowClass.ReferencedAssemblies)
             {
