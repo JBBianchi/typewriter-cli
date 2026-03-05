@@ -17,4 +17,9 @@
     <Copyright>Copyright © Typewriter Contributors. All rights reserved.</Copyright>
   </PropertyGroup>
 
+  <!-- Prevent NETSDK1099 when publishing at solution level with /p:PublishSingleFile=true -->
+  <PropertyGroup Condition="'$(OutputType)' != 'Exe'">
+    <IsPublishable>false</IsPublishable>
+  </PropertyGroup>
+
 </Project>
