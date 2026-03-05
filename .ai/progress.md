@@ -1,6 +1,6 @@
 # Progress Tracker
 
-> Last touched: 2026-03-05 by Claude (Executor, #181)
+> Last touched: 2026-03-05 by Claude (Executor, #182)
 
 ## Current State
 
@@ -120,6 +120,7 @@
 | #178 Integrate InvocationCache into Compiler and RoslynWorkspaceService | M9 | Executor | Done | `InvocationCache` moved to `Typewriter.Generation.Performance`; `Compiler` made non-static with cache injection (template Assembly caching); `RoslynWorkspaceService` caches Roslyn `Compilation` per project path; `InvocationCache` shared via `Program.cs` composition root → `ApplicationRunner` → `Compiler`; all 179/179 tests pass |
 | #179 Enforce AGENTS.md §11 constraints in cache integration | M9 | Executor | Done | Scope isolation: `InvocationCache.SetScope()` prefixes compilation keys with entry-point path; single workspace guard: `Interlocked.CompareExchange` in `RoslynWorkspaceService.LoadAsync`; MSBuild single-pass verified clean; 4 new unit tests (`InvocationCacheTests`); all 183/183 tests pass |
 | #181 Tag performance tests and update ci.yml filter | M9 | Executor | Done | All tests in PerformanceTests tagged `[Trait("Category", "Performance")]`; ci.yml excludes with `--filter "Category!=Performance"`; dedicated `performance` job on ubuntu-latest; `workflow_dispatch` trigger added; README.md with manual run docs; 182 non-perf tests pass |
+| #182 Document performance budgets in README.md | M9 | Executor | Done | `tests/Typewriter.PerformanceTests/README.md` — wall-time (60 s), memory (2 GB), run command, update process, fixture description |
 
 ## Decisions
 
