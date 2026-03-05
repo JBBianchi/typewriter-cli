@@ -18,11 +18,12 @@ namespace Typewriter.Generation;
 /// Roslyn <see cref="Microsoft.CodeAnalysis.CSharp.CSharpCompilation"/> logic is preserved
 /// in <see cref="ShadowClass.Compile(string)"/>.
 /// </summary>
-public sealed class Compiler
+public sealed class Compiler : IDisposable
 {
     private static readonly string TempDirectory = Path.Combine(Path.GetTempPath(), "Typewriter");
 
     private readonly InvocationCache _cache;
+    private readonly string _subDirectory;
 
     /// <summary>
     /// Initializes a new <see cref="Compiler"/> with the specified invocation cache.
@@ -34,6 +35,7 @@ public sealed class Compiler
     public Compiler(InvocationCache cache)
     {
         _cache = cache;
+        _subDirectory = Path.Combine(TempDirectory, Path.GetRandomFileName());
     }
 
     /// <summary>
@@ -50,9 +52,9 @@ public sealed class Compiler
     {
         var assembly = _cache.GetOrAddTemplate(templateFilePath, _ =>
         {
-            if (!Directory.Exists(TempDirectory))
+            if (!Directory.Exists(_subDirectory))
             {
-                Directory.CreateDirectory(TempDirectory);
+                Directory.CreateDirectory(_subDirectory);
             }
 
             // Copy referenced assemblies to the temp directory so the isolated load context
@@ -65,7 +67,7 @@ public sealed class Compiler
                     continue;
                 }
 
-                var asmDestPath = Path.Combine(TempDirectory, Path.GetFileName(asmSourcePath));
+                var asmDestPath = Path.Combine(_subDirectory, Path.GetFileName(asmSourcePath));
 
                 var sourceAssemblyName = AssemblyName.GetAssemblyName(asmSourcePath);
 
@@ -92,7 +94,7 @@ public sealed class Compiler
             }
 
             var fileName = Path.GetRandomFileName();
-            var path = Path.Combine(TempDirectory, fileName);
+            var path = Path.Combine(_subDirectory, fileName);
 
             var result = shadowClass.Compile(path);
 
@@ -131,5 +133,28 @@ public sealed class Compiler
         var type = assembly.GetType("__Typewriter.Template");
         return type ?? throw new InvalidOperationException(
             $"Compiled assembly does not contain the expected type '__Typewriter.Template'. Template: {templateFilePath}");
+    }
+
+    /// <summary>
+    /// Performs best-effort deletion of the per-invocation temporary subdirectory.
+    /// Locked or already-deleted files do not cause exceptions to propagate.
+    /// </summary>
+    public void Dispose()
+    {
+        try
+        {
+            if (Directory.Exists(_subDirectory))
+            {
+                Directory.Delete(_subDirectory, recursive: true);
+            }
+        }
+        catch (IOException)
+        {
+            // Files may be locked by another process; best-effort cleanup.
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Insufficient permissions on some platforms; best-effort cleanup.
+        }
     }
 }
