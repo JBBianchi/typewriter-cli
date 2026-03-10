@@ -1,13 +1,13 @@
 # Progress Tracker
 
-> Last touched: 2026-03-06 by Codex (Executor, T317)
+> Last touched: 2026-03-10 by Codex (Executor, T318)
 
 ## Current State
 
 - **Active milestone**: Complete
-- **Status**: Post-milestone task T317 completed: fixed the two failing unit tests by aligning synthetic-diagnostic setup with source-backed Roslyn locations and tightening `AllowedValues` parity selection to `TestModel.PseudoEnum` without over-constraining attribute-argument projection.
-- **Blocker**: None.
-- **Next step**: Await next post-milestone parity/compatibility issue.
+- **Status**: Post-milestone task T318 completed: release workflow now keeps NuGet tool publish and adds framework-dependent single-file executable artifact publishing for win/linux/macos (x64 + arm64), with executable smoke tests on runnable x64 host architectures and GitHub release attachment of both artifact channels.
+- **Blocker**: Sandbox MSBuild restore/build/test/pack path still fails with `Build FAILED` and `0 Error(s)` when evaluating `Typewriter.Cli.slnx` (same non-actionable environment issue seen in prior post-milestone tasks).
+- **Next step**: Re-run required verification in a stable local/CI environment (`dotnet restore`, `dotnet build -c Release`, `dotnet test -c Release`, `dotnet pack -c Release`) and validate the new release workflow with a tag dry-run.
 
 ## Milestone Map
 
@@ -28,6 +28,7 @@
 
 | Task | Milestone | Agent | Status | Detail |
 |------|-----------|-------|--------|--------|
+| T318 Implement dual release artifacts (`dotnet tool` + `exe`) | Post | Codex (Executor) | Done | [T318-dual-release-artifacts.md](.ai/tasks/T318-dual-release-artifacts.md) - added `publish-exe` RID matrix (`win/linux/osx` x64+arm64), per-RID publish verification + x64 executable smoke tests, versioned zip artifact upload, GitHub release attachment of `*.nupkg` and `*.zip`, and README release docs update; required restore/build/test/pack commands attempted but blocked in sandbox by non-actionable `Build FAILED`/`0 Error(s)` MSBuild behavior on `Typewriter.Cli.slnx`. |
 | T317 Fix failing unit tests (`RoslynWorkspaceServiceTests`, `MetadataParityTests`) | Post | Codex (Executor) | Done | [T317-fix-failing-unit-tests.md](.ai/tasks/T317-fix-failing-unit-tests.md) - made actionable-error test diagnostics source-backed, updated AllowedValues parity test to target `TestModel.PseudoEnum`, and relaxed the assertion to non-null arguments; full `restore/build/test -c Release` passes. |
 | T316 Restore `IncludeProject(name)` backward compatibility via aliases | Post | Codex (Executor) | Done | [T316-includeproject-name-compat-aliases.md](.ai/tasks/T316-includeproject-name-compat-aliases.md) - added project name aliases (assembly name + project-file stem) in workspace inclusion catalog, matched aliases in `ProjectHelpers.AddProject`, and added unit/integration regressions proving name-based selection works end-to-end without path selectors. |
 | T315 Verify and fix `IncludeProject` project filtering if ignored | Post | Codex (Executor) | Done | [T315-includeproject-filtering.md](.ai/tasks/T315-includeproject-filtering.md) - implemented workspace-backed project inclusion resolution in `SettingsImpl`/`ProjectHelpers`, applied filtering in `RoslynMetadataProvider`, wired `ApplicationRunner` to initialize template settings before enumeration, and added `TW1201`/`TW1202` unit + integration regressions; full verification still blocked by sandbox MSBuild failure mode. |
@@ -161,6 +162,7 @@
 | D-0016 | Only unwrap attribute params-array braces when Roslyn text contains a matching opening token | 2026-03-06 | `RoslynAttributeMetadata.Value` remains string-based for compatibility, but params-array cleanup now guards `LastIndexOf` before removing `{` so attributes like `AllowedValues(null, ...)` cannot throw on malformed/unbalanced Roslyn string forms. See T314. |
 | D-0017 | Resolve explicit template project inclusion against the loaded workspace, but preserve whole-workspace generation when no inclusion API is invoked | 2026-03-06 | `ApplicationRunner` now builds a plain project catalog from the loaded workspace and passes it into `SettingsImpl`; `RoslynMetadataProvider` filters by `IncludedProjects` only when a template explicitly calls `IncludeProject`/`IncludeCurrentProject`/`IncludeReferencedProjects`/`IncludeAllProjects`, avoiding a breaking default-scope change for existing solution-root templates while restoring deterministic inclusion semantics. See T315. |
 | D-0018 | Preserve `IncludeProject(name)` compatibility by matching aliases from workspace project metadata | 2026-03-06 | `ProjectInclusionTarget` now carries `NameAliases`, and `ApplicationRunner` populates aliases from Roslyn `Project.Name`, `Project.AssemblyName`, and project-file stem; `ProjectHelpers.AddProject` resolves selectors against these aliases before emitting TW1201/TW1202. See T316. |
+| D-0019 | Release publishes dual channels: NuGet tool package plus GitHub executable archives | 2026-03-10 | `release.yml` now retains `dotnet tool` packaging/publish and adds framework-dependent single-file `dotnet publish` archives per RID (`win/linux/osx` x64+arm64), with `github-release` attaching both `*.nupkg` and `*.zip` assets. See T318. |
 ## Open Questions
 
 | ID | Question | Raised | Status | Target |
@@ -180,6 +182,7 @@ Note: Q1 (`IncludeProject(name)` ambiguity) was resolved â€” see `_archive/
 | 2026-03-05 | Full solution restore/build/test failed in sandbox due private NuGet feed auth/network constraints (`NU1301` on `nuget.pkg.github.com/neuroglia-io`) | Implemented/code-reviewed changes locally; partial project build verified (`Typewriter.CodeModel`), but full verification deferred to credentialed environment | Post |
 | 2026-03-06 | Targeted `dotnet build`/`dotnet test` for T314 in sandbox either hung at restore (`Determining projects to restore...`) or failed during MSBuild project-reference evaluation with `Build FAILED` / `0 Error(s)` and no actionable compile diagnostics | Recorded T314 as implemented with code review and regression coverage added; full verification remains deferred to an environment with working restore/MSBuild behavior | Post |
 | 2026-03-06 | Full `dotnet test -c Release` for T316 failed on two unrelated pre-existing unit tests (`RoslynWorkspaceServiceTests.IsActionableCompilationError_ReturnsTrue_ForRegularSourceError`, `MetadataParityTests.AllowedValuesAttribute_ParamsArray_DoesNotCrash`) | Resolved in T317: aligned the diagnostics unit test to create source-backed locations and updated the AllowedValues parity test selector/assertion; reran full verification (`dotnet restore`, `dotnet build -c Release`, `dotnet test -c Release`) with all tests passing. | Post |
+| 2026-03-10 | Required verification for T318 (`dotnet restore`, `dotnet build -c Release`, `dotnet test -c Release`, `dotnet pack -c Release`) failed in sandbox with non-actionable MSBuild behavior (`Build FAILED` and `0 Error(s)`; restore diagnostic shows `_FilterRestoreGraphProjectInputItems` failure on `Typewriter.Cli.slnx`) | Completed workflow/doc changes and recorded verification attempts; defer full command validation to a stable local/CI environment where solution restore/build operates correctly. | Post |
 
 ## Patterns & Conventions
 
@@ -206,6 +209,7 @@ Note: Q1 (`IncludeProject(name)` ambiguity) was resolved â€” see `_archive/
 - **Explicit-only project filtering**: Build a plain project catalog from the loaded workspace and pass it into `SettingsImpl`; apply project-path filtering in `RoslynMetadataProvider` only when a template explicitly invokes an inclusion API, so `IncludeProject(...)` works without changing the current default whole-workspace scope for solution-root templates. See T315, D-0017.
 - **IncludeProject name compatibility aliases**: Populate project-selection aliases from loaded workspace metadata (`Project.Name`, `Project.AssemblyName`, and `.csproj` file stem), and resolve `IncludeProject(name)` against those aliases to preserve legacy name-based templates without forcing path selectors. See T316, D-0018.
 - **Source-diagnostic unit-test setup**: When testing source-only Roslyn diagnostic filters, create diagnostics from a `CSharpSyntaxTree` with the target file path (`Location.Create(tree, ...)`) instead of `Location.Create(filePath, ...)`, so `Location.IsInSource` behavior matches real compilation diagnostics. See T317.
+- **Dual release artifact convention**: Keep NuGet `dotnet tool` packaging as the canonical publish channel, and publish per-RID executable archives as GitHub release assets with deterministic names `typewriter-cli-<tag>-<rid>.zip`; update `github-release` to attach both artifact families (`*.nupkg`, `*.zip`). See T318, D-0019.
 
 
 

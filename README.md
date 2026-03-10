@@ -107,9 +107,34 @@ git push --tags
 
 The release workflow runs:
 
-1. **Test matrix** — build and test across Windows, Linux, and macOS.
-2. **Parity gate** — verify golden output and diagnostic stability.
-3. **NuGet publish** — pack and push the `typewriter-cli` tool package to NuGet.
+1. **Test matrix** - build and test across Windows, Linux, and macOS.
+2. **Parity gate** - verify golden output and diagnostic stability.
+3. **NuGet publish** - pack and push the `typewriter-cli` tool package to NuGet.
+4. **Executable publish** - publish framework-dependent single-file executables for `win-x64`, `win-arm64`, `linux-x64`, `linux-arm64`, `osx-x64`, and `osx-arm64`, then attach versioned `.zip` assets to the GitHub release.
+
+### Release artifacts
+
+Tag releases now produce two distribution channels:
+
+1. **NuGet tool package** (`Typewriter.Cli.<version>.nupkg`)
+2. **GitHub release executable archives** (`typewriter-cli-v<version>-<rid>.zip`)
+
+Install/use examples:
+
+```bash
+# NuGet tool (global or local tool flow)
+dotnet tool install --global Typewriter.Cli --version <version>
+typewriter-cli generate <templates> --project <path-to-csproj>
+```
+
+```bash
+# Executable archive flow
+# 1) Download typewriter-cli-v<version>-<rid>.zip from the GitHub release.
+# 2) Extract it.
+# 3) Run the binary directly:
+#    Windows: Typewriter.Cli.exe
+#    Linux/macOS: ./Typewriter.Cli
+```
 
 ### Configuring the NuGet API key
 
@@ -124,3 +149,4 @@ See [`AGENTS.md`](AGENTS.md) for coding-agent conventions and project guidelines
 ## License
 
 The upstream Typewriter project is licensed under the [Apache License 2.0](origin/LICENSE). This derivative project aligns with the same license terms.
+

@@ -4,6 +4,9 @@ on:
   push:
     tags: ['v*.*.*']
 
+permissions:
+  contents: write
+
 jobs:
   build-test:
     strategy:
@@ -19,6 +22,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+          include-prerelease: true
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -40,6 +44,13 @@ jobs:
       - name: Pack
         run: dotnet pack src/Typewriter.Cli/Typewriter.Cli.csproj -c Release -o ./artifacts/nupkg --no-build
 
+      - name: Smoke test
+        shell: bash
+        run: |
+          set -e
+          dotnet tool install --local --add-source ./artifacts/nupkg Typewriter.Cli --prerelease --create-manifest-if-needed
+          dotnet typewriter-cli generate tests/fixtures/simple/SimpleProject/Enums.tst tests/fixtures/simple/SimpleProject/Interfaces.tst --project tests/fixtures/simple/SimpleProject/SimpleProject.csproj
+
       - name: Upload NuGet artifact
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
@@ -47,9 +58,38 @@ jobs:
           name: nupkg
           path: ./artifacts/nupkg/*.nupkg
 
-  parity-gate:
+  publish:
     needs: build-test
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Download NuGet artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nupkg
+          path: ./artifacts/nupkg
+
+      - name: Publish to NuGet
+        run: dotnet nuget push ./artifacts/nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+  publish-exe:
+    needs: build-test
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+          - os: windows-latest
+            rid: win-arm64
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: ubuntu-latest
+            rid: linux-arm64
+          - os: macos-latest
+            rid: osx-x64
+          - os: macos-latest
+            rid: osx-arm64
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -59,6 +99,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+          include-prerelease: true
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -71,22 +112,85 @@ jobs:
       - name: Restore
         run: dotnet restore Typewriter.Cli.slnx
 
-      - name: Build
-        run: dotnet build Typewriter.Cli.slnx -c Release --no-restore
+      - name: Publish framework-dependent single-file executable
+        run: >
+          dotnet publish src/Typewriter.Cli/Typewriter.Cli.csproj
+          -c Release
+          -r ${{ matrix.rid }}
+          --self-contained false
+          -p:PublishSingleFile=true
+          -p:PublishTrimmed=false
+          -o ./artifacts/exe/${{ matrix.rid }}/publish
+          --no-restore
 
-      - name: Run golden parity tests
-        run: dotnet test tests/Typewriter.GoldenTests/ -c Release --no-build
+      - name: Verify publish output exists
+        shell: pwsh
+        run: |
+          $rid = '${{ matrix.rid }}'
+          $binaryName = if ($rid.StartsWith('win-')) { 'Typewriter.Cli.exe' } else { 'Typewriter.Cli' }
+          $binaryPath = Join-Path (Get-Location) "artifacts/exe/$rid/publish/$binaryName"
+          if (-not (Test-Path $binaryPath)) {
+            throw "Published binary not found: $binaryPath"
+          }
 
-  publish:
-    needs: [build-test, parity-gate]
+      - name: Smoke test executable (native arch only)
+        if: >
+          (matrix.rid == 'win-x64' && runner.os == 'Windows' && runner.arch == 'X64') ||
+          (matrix.rid == 'linux-x64' && runner.os == 'Linux' && runner.arch == 'X64') ||
+          (matrix.rid == 'osx-arm64' && runner.os == 'macOS' && runner.arch == 'ARM64')
+        shell: pwsh
+        run: |
+          $rid = '${{ matrix.rid }}'
+          $binaryName = if ($rid.StartsWith('win-')) { 'Typewriter.Cli.exe' } else { 'Typewriter.Cli' }
+          $exePath = Join-Path (Get-Location) "artifacts/exe/$rid/publish/$binaryName"
+          & $exePath generate tests/fixtures/simple/SimpleProject/Enums.tst tests/fixtures/simple/SimpleProject/Interfaces.tst --project tests/fixtures/simple/SimpleProject/SimpleProject.csproj --restore
+
+      - name: Create versioned executable archive
+        shell: bash
+        run: |
+          version="${{ github.ref_name }}"
+          rid="${{ matrix.rid }}"
+          publishDir="$(pwd)/artifacts/exe/$rid/publish"
+          outDir="$(pwd)/artifacts/exe"
+          if [[ "$rid" == win-* ]]; then
+            pwsh -c "Compress-Archive -Path '$publishDir/*' -DestinationPath '$outDir/typewriter-cli-$version-$rid.zip'"
+          else
+            tar -czf "$outDir/typewriter-cli-$version-$rid.tar.gz" -C "$publishDir" .
+          fi
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: exe-${{ matrix.rid }}
+          path: ./artifacts/exe/typewriter-cli-${{ github.ref_name }}-${{ matrix.rid }}.*
+
+  github-release:
+    needs: [publish, publish-exe]
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Download NuGet artifact
         uses: actions/download-artifact@v4
         with:
           name: nupkg
           path: ./artifacts/nupkg
 
-      - name: Publish to NuGet
-        run: dotnet nuget push ./artifacts/nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      - name: Download executable artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: exe-*
+          merge-multiple: true
+          path: ./artifacts/exe
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            ./artifacts/nupkg/*.nupkg
+            ./artifacts/exe/*.zip
+            ./artifacts/exe/*.tar.gz
